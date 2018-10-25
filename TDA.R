@@ -4,8 +4,23 @@ charge_data <- file.choose()
 #Read in the file
 inputted.file <- data.frame(read.csv(charge_data), header = TRUE)
 
-x.grid <- data.frame(inputted.file[1:300,c(3,4)], stringsAsFactors = FALSE)
+x.grid <- data.frame(inputted.file[1:100,c(1,5)], stringsAsFactors = FALSE)
 
+#Creates categorical variables for nonnumerical columns
+if (is.factor(x.grid[,1])||is.factor(x.grid[,2])){
+  task.data <- x.grid[,1]
+  task.data.f <- factor(task.data, levels = as.character(unique(task.data)), 
+                        labels=c(1:length(unique(task.data))))
+  task.data.f <- as.numeric(task.data.f)
+  
+  group.data <- x.grid[,2]
+  group.data.f <- factor(group.data, levels = as.character(unique(group.data)), 
+                         labels=c(1:length(unique(group.data))))
+  group.data.f <- as.numeric(group.data.f)
+  
+  x.grid[,1] <- task.data.f
+  x.grid[,2] <- group.data.f
+} 
 
 Xlim <- c(-1.6, 1.6)
 Ylim <- c(-1.7, 1.7)
@@ -14,10 +29,11 @@ Xseq <- seq(from = Xlim[1], to = Xlim[2], by = by)
 Yseq <- seq(from = Ylim[1], to = Ylim[2], by = by)
 total.grid <- expand.grid(Xseq, Yseq)
 
-for(i in 1:NROW(x.grid[, 1])){
-  x.grid[i,1]<-gsub("\\W", "", x.grid[i, 1])
-  x.grid[i,2]<-gsub("\\W", "", x.grid[i, 2])
-}
+#NOTE: this is for when there are IP Addresses (removing '.'), but causes error when not IP?
+# for(i in 1:NROW(x.grid[, 1])){
+#   x.grid[i,1]<-gsub("\\W", "", x.grid[i, 1])
+#   x.grid[i,2]<-gsub("\\W", "", x.grid[i, 2])
+# }
 
 distance <- distFct(X = x.grid, Grid = total.grid)
 
@@ -72,7 +88,6 @@ plot(DiagRips[["diagram"]], rotated = TRUE, band = band[["width"]],
      main = "Rotated Diagram")
 plot(DiagRips[["diagram"]], barcode = TRUE, main = "Barcode")
 
-x.grid <- circleUnif(n = 30)
 # persistence diagram of alpha complex 
 DiagAlphaCmplx <- alphaComplexDiag(X = total.grid, library = c("GUDHI", "Dionysus"),
                                    location = TRUE, printProgress = TRUE)
@@ -94,7 +109,8 @@ par(mfrow = c(1, 1))
 n <- 30
 x.grid <- cbind(circleUnif(n = n), runif(n = n, min = -0.1, max = 0.1))
 
-DiagAlphaShape <- alphaShapeDiag(X = total.grid, maxdimension = 1, library = c("GUDHI", "Dionysus"), 
+DiagAlphaShape <- alphaShapeDiag(X = total.grid, maxdimension = 1, 
+                                 library = c("GUDHI", "Dionysus"), 
                                  location = TRUE, printProgress = TRUE)
 
 par(mfrow = c(1, 2))
@@ -117,6 +133,22 @@ FltRips <- ripsFiltration(X = total.grid, maxdimension = max.dimension,
                           maxscale = max.scale, dist = "euclidean", library = "GUDHI",
                           printProgress = TRUE)
 
+#another alpha persistance diagram?
+DiagAlphaShape <- alphaShapeDiag(X = x.grid, printProgress = FALSE)
+plot(DiagAlphaShape[["diagram"]], main = "Persistance Diagram")
+
+#bottleneck and wasserstein distances
+Diag1 <- ripsDiag(x.grid[,1], maxdimension = 1, maxscale = 5)
+Diag2 <- ripsDiag(x.grid[,2], maxdimension = 1, maxscale = 5)
+
+print (bottleneck(Diag1[["diagram"]], Diag2[["diagram"]],dimension = 1))
+print (wasserstein(Diag1[["diagram"]], Diag2[["diagram"]], p = 2, dimension = 1))
+
+#landscape and silhouettes 
+tseq <- seq(0, maxscale, length = 1000) #domain
+Diag <- ripsDiag(X = x.grid, maxdimension, maxscale,library = "GUDHI", printProgress = FALSE)
+Land <- landscape(Diag[["diagram"]], dimension = 1, KK = 1, tseq)
+Sil <- silhouette(Diag[["diagram"]], p = 1, dimension = 1, tseq)
 
 
 
