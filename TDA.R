@@ -4,7 +4,7 @@ charge_data <- file.choose()
 #Read in the file
 inputted.file <- data.frame(read.csv(charge_data), header = TRUE)
 
-x.grid <- data.frame(inputted.file[1:100,c(1,5)], stringsAsFactors = FALSE)
+x.grid <- data.frame(inputted.file[1:65,c(4,6)], stringsAsFactors = FALSE)
 
 #Creates categorical variables for nonnumerical columns
 if (is.factor(x.grid[,1])||is.factor(x.grid[,2])){
