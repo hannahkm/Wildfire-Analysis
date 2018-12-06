@@ -5,24 +5,20 @@ charge_data <- file.choose()
 #Read in the file
 inputted.file <- data.frame(read.csv(charge_data), header = TRUE)
 
-x.grid <- data.frame(inputted.file[1:100,c(1,4,5)], stringsAsFactors = FALSE)
-x.grid <- as.numeric(unlist(x.grid))
+x.grid <- data.frame(inputted.file[2:nrow(inputted.file),c(1,3,5)], stringsAsFactors = FALSE)
+#x.grid <- as.numeric(unlist(x.grid))
 
 #Creates categorical variables for nonnumerical columns
-if (is.factor(x.grid)){
-  task.data <- x.grid[,1]
-  task.data.f <- factor(task.data, levels = as.character(unique(task.data)), 
-                        labels=c(1:length(unique(task.data))))
-  task.data.f <- as.numeric(task.data.f)
-  
-  group.data <- x.grid[,2]
-  group.data.f <- factor(group.data, levels = as.character(unique(group.data)), 
-                         labels=c(1:length(unique(group.data))))
-  group.data.f <- as.numeric(group.data.f)
-  
-  x.grid[,1] <- task.data.f
-  x.grid[,2] <- group.data.f
-} 
+for (i in 1:ncol(x.grid)){
+  if (is.factor(x.grid[,i])){
+    this.data <- x.grid[,i]
+    this.data.f <- factor(this.data, levels = as.character(unique(this.data)), 
+                          labels=c(1:length(unique(this.data))))
+    this.data.f <- as.numeric(this.data.f)
+    
+    x.grid[,i] <- this.data.f
+  } 
+}
 
 Xlim <- c(-1.5, 1.45)
 Ylim <- c(-1.5, 1.45)
@@ -85,10 +81,10 @@ for (i in tree[["id"]]){
 
 
 
-# NOTE: find some way to accomodate multiple dimensions into 2D info graph/etc
+# NOTE: find some way to accomodate multiple dimensions into 3D info graph/etc
 
-# band <- bootstrapBand(X = x.grid, FUN = kde, Grid = total.grid, B = 100, 
-#                       parallel = FALSE, alpha = 0.1, h = h)
+ band <- bootstrapBand(X = x.grid, FUN = kde, Grid = total.grid, B = 100, 
+                       parallel = FALSE, alpha = 0.1, h = h)
 # 
 # #computes the persistent homology of the superlevel sets
 # #if trying other functions, FUN       and k/h/m0 must line up

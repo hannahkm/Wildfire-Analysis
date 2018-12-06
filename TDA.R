@@ -4,23 +4,20 @@ charge_data <- file.choose()
 #Read in the file
 inputted.file <- data.frame(read.csv(charge_data), header = TRUE)
 
-x.grid <- data.frame(inputted.file[1:65,c(4,6)], stringsAsFactors = FALSE)
+x.grid <- data.frame(inputted.file[2:nrow(inputted.file),c(4,5)], stringsAsFactors = FALSE)
 
 #Creates categorical variables for nonnumerical columns
-if (is.factor(x.grid[,1])||is.factor(x.grid[,2])){
-  task.data <- x.grid[,1]
-  task.data.f <- factor(task.data, levels = as.character(unique(task.data)), 
-                        labels=c(1:length(unique(task.data))))
-  task.data.f <- as.numeric(task.data.f)
-  
-  group.data <- x.grid[,2]
-  group.data.f <- factor(group.data, levels = as.character(unique(group.data)), 
-                         labels=c(1:length(unique(group.data))))
-  group.data.f <- as.numeric(group.data.f)
-  
-  x.grid[,1] <- task.data.f
-  x.grid[,2] <- group.data.f
-} 
+for (i in 1:ncol(x.grid)){
+  if (is.factor(x.grid[,i])){
+    this.data <- x.grid[,i]
+    this.data.f <- factor(this.data, levels = as.character(unique(this.data)), 
+                          labels=c(1:length(unique(this.data))))
+    this.data.f <- as.numeric(this.data.f)
+    
+    x.grid[,i] <- this.data.f
+  } 
+}
+
 
 Xlim <- c(-1.6, 1.6)
 Ylim <- c(-1.7, 1.7)
