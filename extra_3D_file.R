@@ -1,11 +1,9 @@
-library("TDA")
-library("igraph")
-
 charge_data <- file.choose()
 #Read in the file
 inputted.file <- data.frame(read.csv(charge_data), header = TRUE)
 
-x.grid <- data.frame(inputted.file[2:nrow(inputted.file),c(2,4)], stringsAsFactors = FALSE)
+x.grid <- data.frame(inputted.file[2:nrow(inputted.file),c(1,3,5)], stringsAsFactors = FALSE)
+#x.grid <- as.numeric(unlist(x.grid))
 
 #Creates categorical variables for nonnumerical columns
 for (i in 1:ncol(x.grid)){
@@ -19,49 +17,41 @@ for (i in 1:ncol(x.grid)){
   } 
 }
 
-net <- graph_from_data_frame(x.grid)
-tkplot(net, vertex.color = "powderblue", vertex.size = 8, edge.color = "black", 
-      vertex.label = NA, edge.arrow.size = 0.2, layout = layout_with_fr)
-
-
-Xlim <- c(-1.6, 1.6)
-Ylim <- c(-1.7, 1.7)
-by <- 0.065
+Xlim <- c(-1.5, 1.45)
+Ylim <- c(-1.5, 1.45)
+Zlim <- c(-1.5, 1.45)
+by <- 0.06
 Xseq <- seq(from = Xlim[1], to = Xlim[2], by = by)
 Yseq <- seq(from = Ylim[1], to = Ylim[2], by = by)
-total.grid <- expand.grid(Xseq, Yseq)
+Zseq <- seq(from = Ylim[1], to = Ylim[2], by = by)
+total.grid <- expand.grid(Xseq, Yseq, Zseq)
 
-#NOTE: this is for when there are IP Addresses (removing '.'), but causes error when not IP?
-# for(i in 1:NROW(x.grid[, 1])){
-#   x.grid[i,1]<-gsub("\\W", "", x.grid[i, 1])
-#   x.grid[i,2]<-gsub("\\W", "", x.grid[i, 2])
-# }
-
-distance <- distFct(X = x.grid, Grid = total.grid)
+#distance <- distFct(X = x.grid, Grid = total.grid)
+distance <- dist(x.grid)
 
 #DTM (distance to measure) is measured by this complicated math formula
 #calculate DTM for every point in Grid:
 m0 <- 0.1
-DTM <- dtm(X = x.grid, Grid = total.grid, m0 = m0)
+DTM <- dtm(X = x.grid, Grid = x.grid, m0 = m0)
 
 #calculates nearest neighbor
 k <- 60
-kNN <- knnDE(X = x.grid, Grid = total.grid, k = k)
+kNN <- knnDE(X = x.grid, Grid = x.grid, k = k)
 
 #estimates density?
 h <- 0.3
-KDE <- kde(X = x.grid, Grid = total.grid, h = h)
+KDE <- kde(X = x.grid, Grid = x.grid, h = h)
 
 #estimates distance
 h <- 0.3
-Kdist <- kernelDist(X = x.grid, Grid = total.grid, h = h)
+Kdist <- kernelDist(X = x.grid, Grid = x.grid, h = h)
 
-persp(Xseq, Yseq, matrix(DTM, ncol = length(Yseq), nrow = length(Xseq)), xlab = "",
-      ylab = "", zlab = "", theta = 90, phi = -90, ltheta = 20,
-      col = 2, border = NA, main = "Kdist", d = 0.5, scale = FALSE,
-      expand = 3, shade = 0.9)
 
-band <- bootstrapBand(X = x.grid, FUN = kde, Grid = total.grid, B = 100, 
+
+
+# NOTE: find some way to accomodate multiple dimensions into 3D info graph/etc
+
+band <- bootstrapBand(X = x.grid, FUN = kde, Grid = total.grid, B = 100,
                       parallel = FALSE, alpha = 0.1, h = h)
 
 #computes the persistent homology of the superlevel sets
@@ -84,13 +74,13 @@ max.dimension <- 1 # components and loops
 #0 for components, 1 for loops, 2 for voids, etc.
 
 DiagRips <- ripsDiag(X = total.grid, max.dimension, max.scale,
-                     library = c("GUDHI", "Dionysus"), location = TRUE, printProgress = FALSE)
+                    library = c("GUDHI", "Dionysus"), location = TRUE, printProgress = FALSE)
 
 plot(DiagRips[["diagram"]], rotated = TRUE, band = band[["width"]],
      main = "Rotated Diagram")
 plot(DiagRips[["diagram"]], barcode = TRUE, main = "Barcode")
 
-# persistence diagram of alpha complex 
+# persistence diagram of alpha complex
 DiagAlphaCmplx <- alphaComplexDiag(X = total.grid, library = c("GUDHI", "Dionysus"),
                                    location = TRUE, printProgress = TRUE)
 
@@ -98,41 +88,41 @@ DiagAlphaCmplx <- alphaComplexDiag(X = total.grid, library = c("GUDHI", "Dionysu
 par(mfrow = c(1, 2))
 plot(DiagAlphaCmplx[["diagram"]], main = "Alpha complex persistence diagram")
 one <- which(DiagAlphaCmplx[["diagram"]][, 1] == 1)
-one <- one[which.max( + DiagAlphaCmplx[["diagram"]][one, 3] - 
-                        DiagAlphaCmplx[["diagram"]][one, 2])]
+one <- one[which.max( + DiagAlphaCmplx[["diagram"]][one, 3] -
+                       DiagAlphaCmplx[["diagram"]][one, 2])]
 plot(total.grid, col = 1, main = "Representative loop")
-for (i in seq(along = one)) { 
+for (i in seq(along = one)) {
   for (j in seq_len(dim(DiagAlphaCmplx[["cycleLocation"]][[one[i]]])[1])) {
     lines(DiagAlphaCmplx[["cycleLocation"]][[one[i]]][j, , ], pch = 19, cex = 1, col = i + 1)
   }
-} 
+}
 par(mfrow = c(1, 1))
 
 n <- 30
 x.grid <- cbind(circleUnif(n = n), runif(n = n, min = -0.1, max = 0.1))
 
-DiagAlphaShape <- alphaShapeDiag(X = total.grid, maxdimension = 1, 
-                                 library = c("GUDHI", "Dionysus"), 
+DiagAlphaShape <- alphaShapeDiag(X = total.grid, maxdimension = 1,
+                                 library = c("GUDHI", "Dionysus"),
                                  location = TRUE, printProgress = TRUE)
 
 par(mfrow = c(1, 2))
 plot(DiagAlphaShape[["diagram"]], main = "Alpha complex persistence diagram")
 one <- which(DiagAlphaShape[["diagram"]][, 1] == 1)
-one <- one[which.max( + DiagAlphaShape[["diagram"]][one, 3] - 
+one <- one[which.max( + DiagAlphaShape[["diagram"]][one, 3] -
                         DiagAlphaShape[["diagram"]][one, 2])]
 plot(total.grid, col = 1, main = "Representative loop")
-for (i in seq(along = one)) { 
+for (i in seq(along = one)) {
   for (j in seq_len(dim(DiagAlphaShape[["cycleLocation"]][[one[i]]])[1])) {
     lines(DiagAlphaShape[["cycleLocation"]][[one[i]]][j, , ], pch = 19, cex = 1, col = i + 1)
   }
-} 
+}
 
 max.scale <- 0.4
 # limit of the filtration
-max.dimension <- 1 
+max.dimension <- 1
 # components and loops
 FltRips <- ripsFiltration(X = total.grid, maxdimension = max.dimension,
-                          maxscale = max.scale, dist = "euclidean", library = "GUDHI",
+                         maxscale = max.scale, dist = "euclidean", library = "GUDHI",
                           printProgress = TRUE)
 
 #another alpha persistance diagram?
@@ -146,11 +136,8 @@ Diag2 <- ripsDiag(x.grid[,2], maxdimension = 1, maxscale = 5)
 print (bottleneck(Diag1[["diagram"]], Diag2[["diagram"]],dimension = 1))
 print (wasserstein(Diag1[["diagram"]], Diag2[["diagram"]], p = 2, dimension = 1))
 
-#landscape and silhouettes 
+#landscape and silhouettes
 tseq <- seq(0, maxscale, length = 1000) #domain
 Diag <- ripsDiag(X = x.grid, maxdimension, maxscale,library = "GUDHI", printProgress = FALSE)
 Land <- landscape(Diag[["diagram"]], dimension = 1, KK = 1, tseq)
 Sil <- silhouette(Diag[["diagram"]], p = 1, dimension = 1, tseq)
-
-
-
