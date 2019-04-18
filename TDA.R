@@ -3,9 +3,10 @@ library("igraph")
 
 charge_data <- file.choose()
 #Read in the file
-inputted.file <- data.frame(read.csv(charge_data), header = TRUE)
+inputted.file <- data.frame(read.csv(charge_data, header = FALSE))
 
-x.grid <- data.frame(inputted.file[2:nrow(inputted.file),c(2,4)], stringsAsFactors = FALSE)
+x.grid <- data.frame(inputted.file[,c(12,16)], stringsAsFactors = FALSE)
+#1:nrow(inputted.file)
 
 #Creates categorical variables for nonnumerical columns
 for (i in 1:ncol(x.grid)){
@@ -21,7 +22,7 @@ for (i in 1:ncol(x.grid)){
 
 net <- graph_from_data_frame(x.grid)
 tkplot(net, vertex.color = "powderblue", vertex.size = 8, edge.color = "black", 
-      vertex.label = NA, edge.arrow.size = 0.2, layout = layout_with_fr)
+       edge.arrow.size = 0.2, layout = layout_with_fr)
 
 
 Xlim <- c(-1.6, 1.6)
@@ -31,7 +32,8 @@ Xseq <- seq(from = Xlim[1], to = Xlim[2], by = by)
 Yseq <- seq(from = Ylim[1], to = Ylim[2], by = by)
 total.grid <- expand.grid(Xseq, Yseq)
 
-#NOTE: this is for when there are IP Addresses (removing '.'), but causes error when not IP?
+#NOTE: this is for when there are IP Addresses (removing '.'),
+#         but causes error when not IP?
 # for(i in 1:NROW(x.grid[, 1])){
 #   x.grid[i,1]<-gsub("\\W", "", x.grid[i, 1])
 #   x.grid[i,2]<-gsub("\\W", "", x.grid[i, 2])
@@ -84,7 +86,8 @@ max.dimension <- 1 # components and loops
 #0 for components, 1 for loops, 2 for voids, etc.
 
 DiagRips <- ripsDiag(X = total.grid, max.dimension, max.scale,
-                     library = c("GUDHI", "Dionysus"), location = TRUE, printProgress = FALSE)
+                     library = c("GUDHI", "Dionysus"), location = TRUE, 
+                     printProgress = FALSE)
 
 plot(DiagRips[["diagram"]], rotated = TRUE, band = band[["width"]],
      main = "Rotated Diagram")
@@ -103,7 +106,8 @@ one <- one[which.max( + DiagAlphaCmplx[["diagram"]][one, 3] -
 plot(total.grid, col = 1, main = "Representative loop")
 for (i in seq(along = one)) { 
   for (j in seq_len(dim(DiagAlphaCmplx[["cycleLocation"]][[one[i]]])[1])) {
-    lines(DiagAlphaCmplx[["cycleLocation"]][[one[i]]][j, , ], pch = 19, cex = 1, col = i + 1)
+    lines(DiagAlphaCmplx[["cycleLocation"]][[one[i]]][j, , ], pch = 19,
+          cex = 1, col = i + 1)
   }
 } 
 par(mfrow = c(1, 1))
@@ -123,7 +127,8 @@ one <- one[which.max( + DiagAlphaShape[["diagram"]][one, 3] -
 plot(total.grid, col = 1, main = "Representative loop")
 for (i in seq(along = one)) { 
   for (j in seq_len(dim(DiagAlphaShape[["cycleLocation"]][[one[i]]])[1])) {
-    lines(DiagAlphaShape[["cycleLocation"]][[one[i]]][j, , ], pch = 19, cex = 1, col = i + 1)
+    lines(DiagAlphaShape[["cycleLocation"]][[one[i]]][j, , ], pch = 19, 
+          cex = 1, col = i + 1)
   }
 } 
 
@@ -148,7 +153,8 @@ print (wasserstein(Diag1[["diagram"]], Diag2[["diagram"]], p = 2, dimension = 1)
 
 #landscape and silhouettes 
 tseq <- seq(0, maxscale, length = 1000) #domain
-Diag <- ripsDiag(X = x.grid, maxdimension, maxscale,library = "GUDHI", printProgress = FALSE)
+Diag <- ripsDiag(X = x.grid, maxdimension, maxscale,library = "GUDHI", 
+                 printProgress = FALSE)
 Land <- landscape(Diag[["diagram"]], dimension = 1, KK = 1, tseq)
 Sil <- silhouette(Diag[["diagram"]], p = 1, dimension = 1, tseq)
 

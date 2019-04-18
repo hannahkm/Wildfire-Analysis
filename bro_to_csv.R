@@ -32,9 +32,7 @@ new.row <- as.character(unlist(new.row, use.names=FALSE))
 x <- f4(new.row)
 colnames(csv.df) <- as.character(x)
 
-{n <- readline(prompt="Enter file name to save: ")
-n <- paste(n, ".csv", sep="")
-write.csv(csv.df, n, row.names = FALSE)}
+write.csv(csv.df, "csv data.csv", row.names = FALSE)
 
 #convert into list
 f4 <- function(n) {
@@ -44,3 +42,5 @@ f4 <- function(n) {
   }
   x
 }
+
+
