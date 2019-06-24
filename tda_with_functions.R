@@ -18,7 +18,7 @@ library("plotrix")
 # Wind Speed (m/s) (10) DC(14)
 # DC(14) Max Temp(2)
 
-setwd("/Volumes/HKIM/TDA/")
+setwd("C:/Users/kimh2/Desktop/Wildfire-Analysis")
 tmax_humidity <- read.csv("merra2_active_calfire_jja.csv")[,c("t2mmax", "qv2m", 
                                                               "fcount_aqua")] #2,8
 tmax_humidity_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("t2mmax", "qv2m",
@@ -68,6 +68,8 @@ rips_persistence(tmean_fwi)
 rips_persistence(tmean_fwi_y) 
 
 radius_plots(tmax_humidity, 0.1)
+
+returnData(tmax_humidity)
 
 ## FUNCTIONS ####################################################################
 
@@ -143,20 +145,33 @@ mapper_graph <- function(data){
   # data$Color <- cut(data$fcount_aqua, breaks = c(-0.1, 50, Inf), 
   #                   labels = c("black", "red"))
   
-  d<-data[,3]
-  cols<-setNames(colorRampPalette(c("blue", "red"))(length(unique(d)))
-                 , sort(unique(d)))
   vertex.size <- rep(0,data.mapper2$num_vertices)
 
+  # for (i in 1:data.mapper2$num_vertices){ OLD
+  #   if ((data[i,3]) >= 50){
+  #     vertex.size[i] <- (data[i,3])/5
+  #   } else{
+  #     vertex.size[i] <- 8
+  #   }
+  # }
+  
   for (i in 1:data.mapper2$num_vertices){
-    if ((data[i,3]) >= 50){
-      vertex.size[i] <- (data[i,3])/5
-    } else{
-      vertex.size[i] <- 8
+    for (j in 1:length(data.mapper2$points_in_vertex[[i]])){
+      vertex.size[i] <- vertex.size[i] + data[data.mapper2$points_in_vertex[[i]][j],3]
     }
   }
+
+  vertex.size <- (scale(vertex.size)+1)*5
+  
+  d<-data[,3]
+  cols<-setNames(colorRampPalette(c("blue", "red"))(length(unique(vertex.size)))
+                 , sort(unique(vertex.size)))
+  
+  # cols <- as.data.frame(cols)
+  # row.names(cols)<-1:nrow(cols)
+  
   mapper.graph <- graph.adjacency(data.mapper2$adjacency, mode="undirected")
-  plot(mapper.graph, vertex.color = cols[as.character(data[,3])], cex.main=0.5, 
+  plot(mapper.graph, vertex.color = cols[as.character(vertex.size)], cex.main=0.5, 
        horizontal=TRUE,
        vertex.label = NA, vertex.size = vertex.size, 
        main=paste("adjacency between", colnames(data)[1], "and\n", colnames(data)[2],
@@ -298,7 +313,36 @@ printList <- function(list) {
   View(df)
 }
 
-
+returnData <- function(data){
+  data.dist <- dist(data[,c(1,2)])
+  par(mfrow=c(1,1), mar=c(2,3,2,2))
+  
+  data.mapper2 <- mapper2D(
+    distance_matrix = dist(data.frame( x=data[,1], y=data[,2] )),
+    num_intervals = c(5,5),
+    percent_overlap = 60,
+    num_bins_when_clustering = 60)
+  
+  df <- data.frame(matrix())
+  
+  for (i in 1:data.mapper2$num_vertices){
+    df <- rbind.fill(df,as.data.frame(t(data.mapper2$points_in_vertex[[i]])))
+  }
+  df <- df[-1,]
+  
+  vertex.size <- rep(0,data.mapper2$num_vertices)
+  
+  for (i in 1:data.mapper2$num_vertices){
+    for (j in 1:length(data.mapper2$points_in_vertex[[i]])){
+      vertex.size[i] <- vertex.size[i] + data[j,3]
+    }
+  }
+  
+  vertex.size <- (scale(vertex.size)+1)*5
+  df[,1] <- vertex.size
+  
+  View(df)
+}
 
 
 
