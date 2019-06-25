@@ -1,0 +1,33 @@
+Meet next monday: 2/11/2019
+Get data (with HEADERS) and code
+Information/details about all descriptions 
+
+Next monday: 2/18/2019
+1. get one idea from the literature he sent to try on my code (specific idea)
+2. rename variables so they actually make sense and are easier to read
+3. also rename the code itself so it's obvious what it means
+4. read in data with column header names instead of by column index
+5. clean up code so it's easier; create functions to do particular things?
+
+Next monday: 2/25/2019
+1. try plotting persistence diagrams for more variables to compare
+2. non-fire data and compare to yes fire data
+3. look more into tda mapper and the different functions and methods
+4. find way to hover over tdamapper plot and get info about point (visnetwork?)
+5. calculate betti numbers (linear algebra- rank/nullity theorem)
+6. find what makes TDA unique over other methods (linear regression, etc) and a better predictor
+
+Next Monday: 3/11/2019
+1. make titles better: descriptive of what variables are being analyzed
+2. play with the mapper functions (different clustering and stuff) to find more patterns
+3. try to find out where the voids in the persistence diagrams are coming from (time data) and compare active/inactive data and figure out what it means
+4. find some way of creating a predictor for active/inactive seasons/data
+5. reduce number of plots on poster to make room to make them bigger (also make sure they're good quality) and leave room for text
+6. [if you have time] find some wrapper thing to implement python code in R (betti numbers)
+
+
+1. poster: add legends to plots for variables, make future work more specific, remove lambda trees/unneeded graphs not in project, 
+2. comparison graph: MAYBE find graphs that will emphasize differences more, but not really needed
+3. maybe look into rPython?
+4. also, make table on poster in order of increasing/decreasing values 
+5. note: persistence comparison with t2m and fwi (tmean_fwi and tmean_fwi_y) shows the most drastic differences between active and inactive

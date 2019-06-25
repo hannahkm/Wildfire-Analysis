@@ -3,12 +3,11 @@ library(package = "TDA")
 #devtools::install_github("paultpearson/TDAmapper")
 library(TDAmapper)
 library(igraph)
-#install.packages("networkD3")
-library("networkD3")
-#install.packages("netdiffuseR")
-library("netdiffuseR")
+#install.packages("BBmisc")
+library(BBmisc)
 #install.packages("plotrix")
 library("plotrix")
+library("circlize")
 
 # X1: Max Temp(2), Specific Humidity (8) Tmin(4)
 # X2: Max Temp(2), Wind Speed (m/s) (10)
@@ -18,7 +17,8 @@ library("plotrix")
 # Wind Speed (m/s) (10) DC(14)
 # DC(14) Max Temp(2)
 
-setwd("C:/Users/kimh2/Desktop/Wildfire-Analysis")
+setwd("/Volumes/HKIM/TDA/")
+#setwd("E:\\TDA")
 tmax_humidity <- read.csv("merra2_active_calfire_jja.csv")[,c("t2mmax", "qv2m", 
                                                               "fcount_aqua")] #2,8
 tmax_humidity_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("t2mmax", "qv2m",
@@ -28,31 +28,30 @@ tmax_speed <- read.csv("merra2_active_calfire_jja.csv")[,c("t2mmax", "speed",
 tmax_speed_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("t2mmax", "speed",
                                                                "fcount_aqua")]
 
-tmean_humidity <- read.csv("merra2_active_calfire_jja.csv")[,c("t2m","qv2m",
+tmean_humidity <- read.csv("merra2_active_calfire_jja.csv")[,c("dc","qv2m",
                                                                "fcount_aqua")] #6,8
-tmean_humidity_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("t2m","qv2m",
+tmean_humidity_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("dc","qv2m",
                                                                    "fcount_aqua")]
 tmean_fwi <- read.csv(
   "merra2_active_calfire_jja.csv")[,c("t2m","fwi","fcount_aqua")] #6,12
 tmean_fwi_y <- read.csv(
   "merra2_inactive_calfire_jja.csv")[,c("t2m","fwi","fcount_aqua")]
 
-rips_persistence(tmax_humidity)
-barcode_diag(tmax_humidity)
-scatterplot_diag(tmax_humidity)
-lambda_trees(tmax_humidity)
-landscape_diag(tmax_humidity)
-radius_plots(tmax_humidity, 2)
-mapper_graph(tmax_humidity)
+bui_dc <- read.csv(
+  "merra2_active_calfire_jja.csv")[,c("bui","dc","fcount_aqua")]
+bui_dc_y <- read.csv(
+  "merra2_inactive_calfire_jja.csv")[,c("bui","dc","fcount_aqua")]
 
-mapper_graph(tmax_humidity)
-mapper_graph(tmax_humidity_y)
-mapper_graph(tmax_speed)
-mapper_graph(tmax_speed_y)
-mapper_graph(tmean_humidity)
-mapper_graph(tmean_humidity_y)
-mapper_graph(tmean_fwi)
-mapper_graph(tmean_fwi_y)
+mapper_graph(tmax_humidity, "active")
+mapper_graph(tmax_humidity_y, "inactive")
+mapper_graph(tmax_speed, "active")
+mapper_graph(tmax_speed_y, "inactive")
+mapper_graph(tmean_humidity, "active")
+mapper_graph(tmean_humidity_y, "inactive")
+mapper_graph(tmean_fwi, "active")
+mapper_graph(tmean_fwi_y, "inactive")
+mapper_graph(bui_dc, "active")
+mapper_graph(bui_dc_y, "inactive")
 
 
 #notes: generally, the y plots (inactive seasons) don't have voids (blue squares)
@@ -60,20 +59,129 @@ mapper_graph(tmean_fwi_y)
 #       One exception: tmax_humidity_y DOES have voids?
 rips_persistence(tmax_humidity)
 rips_persistence(tmax_humidity_y)
+#persistence_comparison(tmax_humidity, tmax_humidity_y)
+
 rips_persistence(tmax_speed)
 rips_persistence(tmax_speed_y)
 rips_persistence(tmean_humidity)
 rips_persistence(tmean_humidity_y)
 rips_persistence(tmean_fwi)
 rips_persistence(tmean_fwi_y) 
+persistence_comparison(tmax_speed, tmax_speed_y)
+persistence_comparison(tmean_humidity, tmean_humidity_y)
+persistence_comparison(tmean_fwi, tmean_fwi_y)
 
-radius_plots(tmax_humidity, 0.1)
 
-returnData(tmax_humidity)
+radius_plots(tmax_humidity, 0, "active")
+radius_plots(tmax_humidity, 0.1, "active")
+radius_plots(tmax_humidity, 0.3, "active")
+radius_plots(tmax_humidity, 0.6, "active")
+radius_plots(tmax_humidity, 0.8, "active")
+radius_plots(tmax_humidity_y, 0.3, "inactive")
+persistence_comparison(tmax_humidity, tmax_humidity_y)
+persistence_comparison(tmax_speed, tmax_speed_y)
+persistence_comparison(tmean_humidity, tmean_humidity_y)
+persistence_comparison(tmean_fwi, tmean_fwi_y)
+
+# plot_clusters(tmax_humidity,"active")
+# plot_clusters(tmax_humidity_y,"active")
+# plot_clusters(tmax_speed,"active")
+# plot_clusters(tmax_speed_y,"active")
+# plot_clusters(tmean_humidity,"active")
+# plot_clusters(tmean_humidity_y,"active")
+# plot_clusters(tmean_fwi,"active")
+# plot_clusters(tmean_fwi_y,"active")
+
 
 ## FUNCTIONS ####################################################################
 
-radius_plots <- function(data, radius){
+
+plot_clusters <- function(data,type){
+  data.dist <- dist(data[,c(1,2)])
+  par(mfrow=c(1,1))
+  
+  data.mapper2 <- mapper2D(
+    distance_matrix = dist(data.frame( x=data[,1], y=data[,2] )),
+    num_intervals = c(5,5),
+    percent_overlap = 60,
+    num_bins_when_clustering = 60)
+  
+  color.ramp <- rand_color(data.mapper2$num_vertices, hue = NULL, luminosity = "dark", transparency = 0.3)
+  
+  #colorRampPalette(c('red','purple'))(data.mapper2$num_vertices)
+  data$color <- 0
+  for (i in 1:data.mapper2$num_vertices){
+    points.in.vertex <- data.mapper2$points_in_vertex[[i]]
+    len <- length(points.in.vertex)
+    for (j in 1:len){
+      if (!is.na(points.in.vertex[[j]])){
+        data$color[points.in.vertex[[j]]] <- color.ramp[i]
+      }
+    }
+  }
+  x1 <- data[,1]
+  y1 <- data[,2]
+  View(data)
+  plot(x1, y1, xlim=range(x1), ylim=range(y1), xlab = colnames(data)[1], 
+       ylab=colnames(data)[2], pch=16, col=ifelse(data$color==0, "black", data$color),
+       cex=ifelse(data$color==0, 0.2,1.5)) 
+  
+  # for (i in 1:length(x1)){
+  #   for (j in i:length(y1)){
+  #     if (data[i,4]!=0 && data[j,4]!=0 && data[i,4]==data[j,4]){
+  #       segments(x1[i],y1[i],x1[j],y1[j], lwd=0.5)
+  #     } 
+  #   }
+  # }
+  
+}
+
+persistence_comparison <- function(data, data1){
+  Diag <- ripsDiag(data[,c(1,2)], maxdimension = 2, maxscale = 1.0, location = TRUE,
+                   library = c("GUDHI", "Dionysus"), printProgress = FALSE)$diagram
+  Diag1 <- ripsDiag(data1[,c(1,2)], maxdimension = 2, maxscale = 1.0, location = TRUE,
+                    library = c("GUDHI", "Dionysus"), printProgress = FALSE)$diagram
+  
+  df1 <- printList(Diag)
+  df2 <- printList(Diag1)
+  
+  count <- 1
+  while (as.numeric(df1[count,1])==0){
+    count <- count + 1
+  }
+  
+  df1 <- df1[count:nrow(df1),]
+  df2 <- df2[count:nrow(df2),]
+  
+  active.x1<-df1[,2]
+  active.y1<-df1[,3]
+  inactive.x1 <- df2[,2]
+  inactive.y1 <- df2[,3] 
+  
+  # par(mfrow=c(1,1), mar=c(7,7,8,7))
+  # plot(active.x1, active.y1, xlim=range(active.x1), ylim=range(active.y1), xlab = "birth", 
+  #      ylab="death", pch = 16, col = 'red', cex.main=2.5, cex.lab=2.5, cex = 2,
+  #      main=paste("comparison of loops/voids in \n active and inactive seasons -",
+  #                 colnames(data)[1], " and ", colnames(data1)[2]))
+  # #points(active.x1, active.y1, col='red', cex=0.5, pch=16) 
+  # points(inactive.x1, inactive.y1, col='blue', pch=16, cex = 2) 
+  # segments(0,0,1,1, lwd=0.5)
+  # legend("bottomright", legend=c("Active", "Inactive"),
+  #        col=c("red", "blue"), pch=c(16, 16), cex = 1.5, bty="n")
+
+  plot(active.x1, active.y1, xlim=range(active.x1), ylim=range(active.y1), xlab = "birth",
+       ylab="death", pch = ifelse(df1[,1] == 1,18,19), col = 'red',
+       main=paste("comparison of loops/voids in \n active and inactive seasons\n",
+                  colnames(data)[1], " and ", colnames(data1)[2]))
+  #points(active.x1, active.y1, col='red', cex=0.5, pch=16)
+  points(inactive.x1, inactive.y1, col='blue', pch=ifelse(df2[,1] == 1,18,19))
+  segments(0,0,1,1, lwd=0.5)
+  legend("bottomright", inset = 0.01, legend=c("Active", "Inactive", "loops", "voids"),
+         col=c("red", "blue", "black", "black"), pch=c(16, 16, 18, 19))
+  
+}
+
+radius_plots <- function(data, radius, type){
   connected<-0
   #segment.count<-0
   #edge.count<-0
@@ -84,7 +192,7 @@ radius_plots <- function(data, radius){
   plot(x1, y1, xlim=range(x1), ylim=range(y1), xlab = colnames(data)[1], 
        ylab=colnames(data)[2], pch=16,
        main = paste("plot between", colnames(data)[1], "and\n", 
-                    colnames(data)[2],"with radius", radius)) 
+                    colnames(data)[2],"with radius", radius, "\n - ", type, "summer")) 
   points(x1, y1, col='black', cex=0.5, pch=16) 
   for (i in 1:nrow(data)) {
     xc=x1[[i]]
@@ -107,33 +215,9 @@ radius_plots <- function(data, radius){
   
 }
 
-mapper_graph <- function(data){
+mapper_graph <- function(data, type){
   data.dist <- dist(data[,c(1,2)])
-  par(mfrow=c(1,1), mar=c(2,3,2,2))
-  
-  # data.mapper <- mapper(dist_object = data.dist,
-  #                       filter_values = data[,1],
-  #                       num_intervals = 6,
-  #                       percent_overlap = 50,
-  #                       num_bins_when_clustering = 50) #was 10
-  # 
-  # data.graph <- graph.adjacency(data.mapper$adjacency, mode="undirected")
-  # 
-  # y.mean.vertex <- rep(0,data.mapper$num_vertices)
-  # vertex.size <- rep(0,data.mapper$num_vertices)
-  # for (i in 1:data.mapper$num_vertices){
-  #   points.in.vertex <- data.mapper$points_in_vertex[[i]]
-  #   y.mean.vertex[i] <-mean((data[,2][points.in.vertex]))
-  #   vertex.size[i] <- length((data.mapper$points_in_vertex[[i]]))/4
-  # }
-  # y.mean.vertex.grey <- grey(1-(y.mean.vertex - min(y.mean.vertex))
-  #                            /(max(y.mean.vertex) - min(y.mean.vertex) ))
-  # 
-  # V(data.graph)$color <- y.mean.vertex.grey
-  # V(data.graph)$size <- vertex.size
-  # plot(data.graph, main = paste("adjacency between", colnames(data)[1], "and\n",
-  #                               colnames(data)[2], ": size based on clustering"), 
-  #      cex.main=0.5, horizontal=TRUE)
+  par(mfrow=c(1,1))
   
   data.mapper2 <- mapper2D(
     distance_matrix = dist(data.frame( x=data[,1], y=data[,2] )),
@@ -141,75 +225,79 @@ mapper_graph <- function(data){
     percent_overlap = 60,
     num_bins_when_clustering = 60)
   
-  #changes color based on if there are fires or not
-  # data$Color <- cut(data$fcount_aqua, breaks = c(-0.1, 50, Inf), 
-  #                   labels = c("black", "red"))
+  data.graph <- graph.adjacency(data.mapper2$adjacency, mode="undirected")
   
   vertex.size <- rep(0,data.mapper2$num_vertices)
-
-  # for (i in 1:data.mapper2$num_vertices){ OLD
-  #   if ((data[i,3]) >= 50){
-  #     vertex.size[i] <- (data[i,3])/5
-  #   } else{
-  #     vertex.size[i] <- 8
-  #   }
-  # }
-  
+  vertex.size.var1 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var2 <- rep(0,data.mapper2$num_vertices)
   for (i in 1:data.mapper2$num_vertices){
-    for (j in 1:length(data.mapper2$points_in_vertex[[i]])){
-      vertex.size[i] <- vertex.size[i] + data[data.mapper2$points_in_vertex[[i]][j],3]
+    points.in.vertex <- data.mapper2$points_in_vertex[[i]]
+    len <- length(points.in.vertex)
+    count <- 0
+    count1 <- 0
+    count2 <- 0
+    for (j in 1:len){
+      if (!is.na(data[points.in.vertex[[j]],3])){
+        if (data[points.in.vertex[[j]],3]>=50){
+          count <- count + abs(data[points.in.vertex[[j]],3])
+        }
+      }
+      if (!is.na(data[points.in.vertex[[j]],2])){
+        count1 <- count1 + data[points.in.vertex[[j]],2]
+      }
+      if (!is.na(data[points.in.vertex[[j]],1])){
+        count2 <- count2 + data[points.in.vertex[[j]],1]
+      }
     }
+    if (count <= 5){
+      print(count)
+      count <- 5
+    } else{
+      count <- count/20
+    }
+    vertex.size[i] <- count
+    vertex.size.var1[i] <- (count1)*1.5
+    vertex.size.var2[i] <- (count2)*1.5
   }
-
-  vertex.size <- (scale(vertex.size)+1)*5
   
-  d<-data[,3]
-  cols<-setNames(colorRampPalette(c("blue", "red"))(length(unique(vertex.size)))
-                 , sort(unique(vertex.size)))
-  
-  # cols <- as.data.frame(cols)
-  # row.names(cols)<-1:nrow(cols)
-  
-  mapper.graph <- graph.adjacency(data.mapper2$adjacency, mode="undirected")
-  plot(mapper.graph, vertex.color = cols[as.character(vertex.size)], cex.main=0.5, 
-       horizontal=TRUE,
-       vertex.label = NA, vertex.size = vertex.size, 
-       main=paste("adjacency between", colnames(data)[1], "and\n", colnames(data)[2],
-                  ": size based on fire count"))
+  l <- layout.auto(data.graph)
+  plot(data.graph, main = paste(type, "summers - size based on fire count"), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, vertex.size = vertex.size, layout = l)
+  plot(data.graph, main = paste(type, "summers - size based on", colnames(data)[[1]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, vertex.size = abs(vertex.size.var1)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var2 > 0, "red", ifelse(vertex.size.var2 < 0,"blue", "black")))
+  plot(data.graph, main = paste(type, "summers - size based on", colnames(data)[[2]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, vertex.size = abs(vertex.size.var2)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var1 > 0, "red", ifelse(vertex.size.var1 < 0,"blue", "black")))
 }
-
 
 #rips persistence using kde, knnDE, and dtm for confidence band
 rips_persistence <- function(data){
   Diag <- ripsDiag(data[,c(1,2)], maxdimension = 2, maxscale = 1.0, location = TRUE,
-                    library = c("GUDHI", "Dionysus"), printProgress = FALSE)$diagram
+                   library = c("GUDHI", "Dionysus"), printProgress = FALSE)$diagram
   
-  printList(Diag)
   
-  #par(mfrow = c(1,1))
+  #par(mfrow = c(2,1))
   band <- bootstrapBand(X=data[,c(1,2)], FUN=kde, Grid=data[,c(1,2)], B=100,
                         parallel=FALSE, alpha = 0.1, h=0.3)
   plot(Diag, diagLim=NULL, dimension=NULL, col=NULL, rotated=FALSE, barcode=FALSE,
        band=2*band[["width"]], lab.line=2.2, colorBand="pink",
-       colorBorder=NA, add = FALSE,
+       colorBorder=NA, add = FALSE, cex.lab = 2.5, cex = 2.5,
        main= paste("persistence diagram with ", colnames(data)[1], "and \n", colnames(data)[2],
-                                                      ": kde band"))
+                   ": kde band"))
   
-  # band <- bootstrapBand(X=data[,c(1,2)], FUN=knnDE, Grid=data[,c(1,2)], B=100,
-  #                       parallel=FALSE, alpha = 0.1, k=60)
-  # plot(Diag, diagLim=NULL, dimension=NULL, col=NULL, rotated=FALSE, barcode=FALSE,
-  #      band=2*band[["width"]], lab.line=2.2, colorBand="pink",
-  #      colorBorder=NA, add = FALSE,
-  #      main=paste("persistence diagram with ", colnames(data)[1], "and", colnames(data)[2],
-  #                 ": knnDE band"))
-  # 
-  # band <- bootstrapBand(X=data[,c(1,2)], FUN=dtm, Grid=data[,c(1,2)], B=100,
-  #                       parallel=FALSE, alpha = 0.1, m0=0.1)
-  # plot(Diag, diagLim=NULL, dimension=NULL, col=NULL, rotated=FALSE, barcode=FALSE,
-  #      band=2*band[["width"]], lab.line=2.2, colorBand="pink",
-  #      colorBorder=NA, add = FALSE,
-  #      main=paste("persistence diagram with ", colnames(data)[1], "and", colnames(data)[2],
-  #                 ": dtm band"))
+  plot(Diag, diagLim=NULL, dimension=NULL, col=NULL, rotated=FALSE, barcode=FALSE,
+       band=NULL, lab.line=2.2, colorBand="pink",
+       colorBorder=NA, add = FALSE, cex.lab = 2.5, cex = 2.5,
+       main= paste("persistence diagram with ", colnames(data)[1], "and \n", colnames(data)[2],
+                   ": kde band"))
+  # legend("bottomright", legend=c("connection", "loops", "voids"), pch=c(16, 2, 5), 
+  #        col=c("black", "red", "blue"),
+  #        title = "Legend")
+  
+  df <- printList(Diag)
+  
+  df
 }
 
 #barcode diagram for data
@@ -226,14 +314,13 @@ barcode_diag <- function(data){
 #scatterplot of data
 scatterplot_diag <-function(data){
   data$Color <- cut(data$fcount_aqua, breaks = c(0, 50, Inf), 
-                     labels = c("black", "red"))
+                    labels = c("black", "red"))
   
   par(mfrow = c(1,1), mar=c(3,3,3,3))
   plot(data[,1], data[,2], col=data$Color, xlab=colnames(data)[1], 
        ylab=colnames(data)[2], main=paste("scatterplot with", colnames(data)[1], "and", 
                                           colnames(data)[2]))
   
-  #plot(data, main="Active Summer", xlab=colnames(data)[1], ylab=colnames(data)[2])
   
 }
 
@@ -242,7 +329,7 @@ lambda_trees <- function(data){
   Tree <- clusterTree(data[,c(1,2)], k = 20, density = "knn")
   TreeKDE <- clusterTree(data[,c(1,2)], 20, h = 0.1, density = "kde")
   
-
+  
   par(mfrow = c(2,1), mar=c(2,3,2,2))
   plot(Tree, type = "lambda", main = paste("lambda Tree (knn) ", colnames(data)[1], 
                                            "and", colnames(data)[2]))
@@ -263,42 +350,12 @@ landscape_diag <- function(data){
   
   par(mfrow = c(3,1), mar=c(2,3,2,2))
   plot(tseq, Land1, type = "l", main = paste("Landscape, dim = 0, with", colnames(data)[1], 
-      "and", colnames(data)[2]), ylab = "", asp = 1, col = "red", lwd = 3)
+                                             "and", colnames(data)[2]), ylab = "", asp = 1, col = "red", lwd = 3)
   plot(tseq, Land2, type = "l", main = paste("Landscape, dim = 1, with", colnames(data)[1], 
-      "and", colnames(data)[2]), ylab = "", asp = 1, col = "red", lwd = 3)
+                                             "and", colnames(data)[2]), ylab = "", asp = 1, col = "red", lwd = 3)
   plot(tseq, Land3, type = "l", main = paste("Landscape, dim = 2, with", colnames(data)[1], 
-      "and", colnames(data)[2]), ylab = "", asp = 1, col = "red", lwd = 3)
+                                             "and", colnames(data)[2]), ylab = "", asp = 1, col = "red", lwd = 3)
 }
-
-
-
-
-
-
-
-# #"ggplot2 doesn't know how to deal with data of class numeric"
-# density_plots <- function(data){
-#   tmax_humidity<-data[,1]
-#   tmax_speed<-data[,2]
-#   commonTheme=list(labs(color="Density",fill="Density",x="x",y="y"),theme_bw(),
-#                    theme(legend.position=c(0,1), 3legend.justification=c(0,1)))
-#   
-#   ggplot(data=data, aes(tmax_humidity, tmax_speed)) + 
-#       stat_densittmax_speed_yd(aes(fill=..level..,alpha=..level..), 
-#       geom='polygon',colour='black') +
-#       scale_fill_continuous(low="green",high="red") +
-#       geom_smooth(method=lm, linetype=2, colour="red", se=FALSE) +
-#       guides(alpha="none") + geom_point(shape=1, colour = 
-#       "black", size = 0.1) + commonTheme
-#   
-#   plot <- ggplot(tmax_humidity, aes(tmax_humidity[,1], 
-#       tmax_humidity[,2])) #here is the error!
-#   
-#   # a different type of density plot?
-#   plot + stat_densittmax_speed_yd(geom="tile", aes(fill = ..density..), 
-#                         contour = FALSE) + geom_point(colour = "white")
-# }
-# 
 
 printList <- function(list) {
   
@@ -306,43 +363,16 @@ printList <- function(list) {
   c2 <- as.data.frame(as.matrix(list[,2]))
   c3 <- as.data.frame(as.matrix(list[,3]))
   df <- data.frame(matrix(ncol = 3, nrow = nrow(c1)))
-  df$dimension <- c1
-  df$birth <- c2
-  df$death <- c3
+  df[,1] <- c1
+  df[,2] <- c2
+  df[,3] <- c3
+  colnames(df) <- c("dimension", "birth", "death")
   
-  View(df)
+  df
 }
 
-returnData <- function(data){
-  data.dist <- dist(data[,c(1,2)])
-  par(mfrow=c(1,1), mar=c(2,3,2,2))
-  
-  data.mapper2 <- mapper2D(
-    distance_matrix = dist(data.frame( x=data[,1], y=data[,2] )),
-    num_intervals = c(5,5),
-    percent_overlap = 60,
-    num_bins_when_clustering = 60)
-  
-  df <- data.frame(matrix())
-  
-  for (i in 1:data.mapper2$num_vertices){
-    df <- rbind.fill(df,as.data.frame(t(data.mapper2$points_in_vertex[[i]])))
-  }
-  df <- df[-1,]
-  
-  vertex.size <- rep(0,data.mapper2$num_vertices)
-  
-  for (i in 1:data.mapper2$num_vertices){
-    for (j in 1:length(data.mapper2$points_in_vertex[[i]])){
-      vertex.size[i] <- vertex.size[i] + data[j,3]
-    }
-  }
-  
-  vertex.size <- (scale(vertex.size)+1)*5
-  df[,1] <- vertex.size
-  
-  View(df)
-}
+
+
 
 
 
