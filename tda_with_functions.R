@@ -371,6 +371,38 @@ printList <- function(list) {
   df
 }
 
+returnData <- function(data){
+  data.dist <- dist(data[,c(1,2)])
+  par(mfrow=c(1,1), mar=c(2,3,2,2))
+  
+  data.mapper2 <- mapper2D(
+    distance_matrix = dist(data.frame( x=data[,1], y=data[,2] )),
+    num_intervals = c(5,5),
+    percent_overlap = 60,
+    num_bins_when_clustering = 60)
+  
+  df <- data.frame(matrix())
+  
+  for (i in 1:data.mapper2$num_vertices){
+    df <- rbind.fill(df,as.data.frame(t(data.mapper2$points_in_vertex[[i]])))
+  }
+  df <- df[-1,]
+  
+  vertex.size <- rep(0,data.mapper2$num_vertices)
+  
+  for (i in 1:data.mapper2$num_vertices){
+    for (j in 1:length(data.mapper2$points_in_vertex[[i]])){
+      vertex.size[i] <- vertex.size[i] + data[j,3]
+    }
+  }
+  
+  vertex.size <- (scale(vertex.size)+1)*5
+  df[,1] <- vertex.size
+  
+  View(df)
+}
+
+
 
 
 
