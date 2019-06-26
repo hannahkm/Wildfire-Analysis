@@ -373,7 +373,6 @@ printList <- function(list) {
 }
 
 returnData <- function(data){
-  data.dist <- dist(data[,c(1,2)])
   par(mfrow=c(1,1), mar=c(2,3,2,2))
   
   data.mapper2 <- mapper2D(
@@ -403,8 +402,16 @@ returnData <- function(data){
   
   View(df)
   print(sort(unique(as.vector(as.matrix(df[,-1])))))
+  
 }
 
+#mapper performs clustering within each level set and generate 
+    #one node (vertex) for each cluster
+
+#interesting: For each pair of clusters in adjacent level sets with a nonempty 
+    #intersection, generate one edge between vertices. The function 
+    #mapper1D uses a filter function with codomain R, while the 
+    #function mapper2D uses a filter function with codomain R^2.
 
 
 
