@@ -8,6 +8,7 @@ library(BBmisc)
 #install.packages("plotrix")
 library("plotrix")
 library("circlize")
+library("plyr")
 
 # X1: Max Temp(2), Specific Humidity (8) Tmin(4)
 # X2: Max Temp(2), Wind Speed (m/s) (10)
@@ -92,7 +93,7 @@ persistence_comparison(tmean_fwi, tmean_fwi_y)
 # plot_clusters(tmean_fwi,"active")
 # plot_clusters(tmean_fwi_y,"active")
 
-
+returnData(tmax_humidity)
 ## FUNCTIONS ####################################################################
 
 
@@ -398,8 +399,10 @@ returnData <- function(data){
   
   vertex.size <- (scale(vertex.size)+1)*5
   df[,1] <- vertex.size
+  df[is.na(df)] <- "."
   
   View(df)
+  print(sort(unique(as.vector(as.matrix(df[,-1])))))
 }
 
 
