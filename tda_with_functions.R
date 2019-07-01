@@ -20,6 +20,8 @@ library("plyr")
 
 setwd("/Volumes/HKIM/TDA/")
 #setwd("E:\\TDA")
+setwd("/Users/hk/Desktop/School/MRHS/11th\ Grade/R/NN-ML/Wildfire-NN-ML/ML_Data/Old\ Data")
+
 tmax_humidity <- read.csv("merra2_active_calfire_jja.csv")[,c("t2mmax", "qv2m", 
                                                               "fcount_aqua")] #2,8
 tmax_humidity_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("t2mmax", "qv2m",
@@ -392,7 +394,7 @@ returnData <- function(data){
   
   for (i in 1:data.mapper2$num_vertices){
     for (j in 1:length(data.mapper2$points_in_vertex[[i]])){
-      vertex.size[i] <- vertex.size[i] + data[j,3]
+      vertex.size[i] <- vertex.size[i] + data[data.mapper2$points_in_vertex[[i]][j],3]
     }
   }
   
