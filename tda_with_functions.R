@@ -105,6 +105,7 @@ plot_clusters <- function(data,type){
   
   data.mapper2 <- mapper2D(
     distance_matrix = dist(data.frame( x=data[,1], y=data[,2] )),
+    filter_values = list(data[,1],data[,2]),
     num_intervals = c(5,5),
     percent_overlap = 60,
     num_bins_when_clustering = 60)
@@ -379,6 +380,7 @@ returnData <- function(data){
   
   data.mapper2 <- mapper2D(
     distance_matrix = dist(data.frame( x=data[,1], y=data[,2] )),
+    filter_values = list(data[,1],data[,2]),
     num_intervals = c(5,5),
     percent_overlap = 60,
     num_bins_when_clustering = 60)

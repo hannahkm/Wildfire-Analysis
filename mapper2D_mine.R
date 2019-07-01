@@ -3,6 +3,9 @@
 #' @seealso \code{\link{mapper1D}}
 #' @keywords mapper2D
 
+data <- read.csv("merra2_active_calfire_jja.csv")[, c("t2mmax", "qv2m",
+                                                      "fcount_aqua", "year", "month", "day")]
+
 distance_matrix = dist(data.frame( x=data[,1], y=data[,2] ))
 filter_values = list(data[,1],data[,2])
 num_intervals = c(5,5)
@@ -28,11 +31,9 @@ filter_min_2 <- min(filter_values[[2]])
 filter_max_2 <- max(filter_values[[2]])
 
 interval_length_1 <-
-  (filter_max_1 - filter_min_1) / (num_intervals[1] - (num_intervals[1] - 1) * percent_overlap /
-                                     100)
+  (filter_max_1 - filter_min_1)/(num_intervals[1]-(num_intervals[1] - 1)*percent_overlap/100)
 interval_length_2 <-
-  (filter_max_2 - filter_min_2) / (num_intervals[2] - (num_intervals[2] - 1) * percent_overlap /
-                                     100)
+  (filter_max_2 - filter_min_2)/(num_intervals[2]-(num_intervals[2]-1)*percent_overlap/100)
 
 step_size_1 <- interval_length_1 * (1 - percent_overlap / 100)
 step_size_2 <- interval_length_2 * (1 - percent_overlap / 100)
@@ -126,7 +127,8 @@ for (level in 1:num_levels) {
   for (j in 1:num_vertices_in_level) {
     vertex_index <- vertex_index + 1
     
-    # points_in_level_logical is a logical vector, so use which(points_in_level_logical==TRUE) to convert it to a numerical vector of indices
+    # points_in_level_logical is a logical vector, so use which(points_in_level_logical==TRUE)
+            #to convert it to a numerical vector of indices
     #nodeset <- which(points_in_level_logical==TRUE)[cluster_indices_within_level == j]
     
     level_of_vertex[vertex_index] <- level
@@ -231,9 +233,10 @@ cluster_cutoff_at_first_empty_bin <- function(heights, diam, num_bins_when_clust
     cutoff <- Inf
     return(cutoff)
   } else {
-    #  which returns the indices of the logical vector (z == TRUE), min gives the smallest index
+    #which returns the indices of the logical vector (z == TRUE), min gives the smallest index
     cutoff <- myhist$mids[ min(which(z == TRUE)) ]
     return(cutoff)
   }
   
 }
+
