@@ -23,79 +23,85 @@ setwd("/Volumes/HKIM/TDA/")
 setwd("/Users/hk/Desktop/School/MRHS/11th\ Grade/R/NN-ML/Wildfire-NN-ML/ML_Data/Old\ Data")
 
 tmax_humidity <- read.csv("merra2_active_calfire_jja.csv")[,c("t2mmax", "qv2m", 
-                                                              "fcount_aqua")] #2,8
-tmax_humidity_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("t2mmax", "qv2m",
-                                                                  "fcount_aqua")]
-tmax_speed <- read.csv("merra2_active_calfire_jja.csv")[,c("t2mmax", "speed",
-                                                           "fcount_aqua")] #2,10
-tmax_speed_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("t2mmax", "speed",
-                                                               "fcount_aqua")]
-
-tmean_humidity <- read.csv("merra2_active_calfire_jja.csv")[,c("dc","qv2m",
-                                                               "fcount_aqua")] #6,8
-tmean_humidity_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("dc","qv2m",
-                                                                   "fcount_aqua")]
-tmean_fwi <- read.csv(
-  "merra2_active_calfire_jja.csv")[,c("t2m","fwi","fcount_aqua")] #6,12
-tmean_fwi_y <- read.csv(
-  "merra2_inactive_calfire_jja.csv")[,c("t2m","fwi","fcount_aqua")]
-
-bui_dc <- read.csv(
-  "merra2_active_calfire_jja.csv")[,c("bui","dc","fcount_aqua")]
-bui_dc_y <- read.csv(
-  "merra2_inactive_calfire_jja.csv")[,c("bui","dc","fcount_aqua")]
+                                    "fcount_aqua","fwi","isi","bui","dc","speed","t2m")] #2,8
+if (true){
+  tmax_humidity_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("t2mmax", "qv2m",
+                                                                    "fcount_aqua")]
+  tmax_speed <- read.csv("merra2_active_calfire_jja.csv")[,c("t2mmax", "speed",
+                                                             "fcount_aqua")] #2,10
+  tmax_speed_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("t2mmax", "speed",
+                                                                 "fcount_aqua")]
+  
+  tmean_humidity <- read.csv("merra2_active_calfire_jja.csv")[,c("dc","qv2m",
+                                                                 "fcount_aqua")] #6,8
+  tmean_humidity_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("dc","qv2m",
+                                                                     "fcount_aqua")]
+  tmean_fwi <- read.csv(
+    "merra2_active_calfire_jja.csv")[,c("t2m","fwi","fcount_aqua")] #6,12
+  tmean_fwi_y <- read.csv(
+    "merra2_inactive_calfire_jja.csv")[,c("t2m","fwi","fcount_aqua")]
+  
+  bui_dc <- read.csv(
+    "merra2_active_calfire_jja.csv")[,c("bui","dc","fcount_aqua")]
+  bui_dc_y <- read.csv(
+    "merra2_inactive_calfire_jja.csv")[,c("bui","dc","fcount_aqua")]
+}
 
 mapper_graph(tmax_humidity, "active")
-mapper_graph(tmax_humidity_y, "inactive")
-mapper_graph(tmax_speed, "active")
-mapper_graph(tmax_speed_y, "inactive")
-mapper_graph(tmean_humidity, "active")
-mapper_graph(tmean_humidity_y, "inactive")
-mapper_graph(tmean_fwi, "active")
-mapper_graph(tmean_fwi_y, "inactive")
-mapper_graph(bui_dc, "active")
-mapper_graph(bui_dc_y, "inactive")
+if (true){
+  mapper_graph(tmax_humidity_y, "inactive")
+  mapper_graph(tmax_speed, "active")
+  mapper_graph(tmax_speed_y, "inactive")
+  mapper_graph(tmean_humidity, "active")
+  mapper_graph(tmean_humidity_y, "inactive")
+  mapper_graph(tmean_fwi, "active")
+  mapper_graph(tmean_fwi_y, "inactive")
+  mapper_graph(bui_dc, "active")
+  mapper_graph(bui_dc_y, "inactive")
+}
 
 
 #notes: generally, the y plots (inactive seasons) don't have voids (blue squares)
 #       but the x plots (active seasons) do have voids
 #       One exception: tmax_humidity_y DOES have voids?
-rips_persistence(tmax_humidity)
-rips_persistence(tmax_humidity_y)
-#persistence_comparison(tmax_humidity, tmax_humidity_y)
-
-rips_persistence(tmax_speed)
-rips_persistence(tmax_speed_y)
-rips_persistence(tmean_humidity)
-rips_persistence(tmean_humidity_y)
-rips_persistence(tmean_fwi)
-rips_persistence(tmean_fwi_y) 
-persistence_comparison(tmax_speed, tmax_speed_y)
-persistence_comparison(tmean_humidity, tmean_humidity_y)
-persistence_comparison(tmean_fwi, tmean_fwi_y)
-
-
-radius_plots(tmax_humidity, 0, "active")
-radius_plots(tmax_humidity, 0.1, "active")
-radius_plots(tmax_humidity, 0.3, "active")
-radius_plots(tmax_humidity, 0.6, "active")
-radius_plots(tmax_humidity, 0.8, "active")
-radius_plots(tmax_humidity_y, 0.3, "inactive")
-persistence_comparison(tmax_humidity, tmax_humidity_y)
-persistence_comparison(tmax_speed, tmax_speed_y)
-persistence_comparison(tmean_humidity, tmean_humidity_y)
-persistence_comparison(tmean_fwi, tmean_fwi_y)
-
-# plot_clusters(tmax_humidity,"active")
-# plot_clusters(tmax_humidity_y,"active")
-# plot_clusters(tmax_speed,"active")
-# plot_clusters(tmax_speed_y,"active")
-# plot_clusters(tmean_humidity,"active")
-# plot_clusters(tmean_humidity_y,"active")
-# plot_clusters(tmean_fwi,"active")
-# plot_clusters(tmean_fwi_y,"active")
-
-returnData(tmax_humidity)
+if (true){
+  rips_persistence(tmax_humidity)
+  rips_persistence(tmax_humidity_y)
+  #persistence_comparison(tmax_humidity, tmax_humidity_y)
+  
+  rips_persistence(tmax_speed)
+  rips_persistence(tmax_speed_y)
+  rips_persistence(tmean_humidity)
+  rips_persistence(tmean_humidity_y)
+  rips_persistence(tmean_fwi)
+  rips_persistence(tmean_fwi_y) 
+  persistence_comparison(tmax_speed, tmax_speed_y)
+  persistence_comparison(tmean_humidity, tmean_humidity_y)
+  persistence_comparison(tmean_fwi, tmean_fwi_y)
+  
+  
+  radius_plots(tmax_humidity, 0, "active")
+  radius_plots(tmax_humidity, 0.1, "active")
+  radius_plots(tmax_humidity, 0.3, "active")
+  radius_plots(tmax_humidity, 0.6, "active")
+  radius_plots(tmax_humidity, 0.8, "active")
+  radius_plots(tmax_humidity_y, 0.3, "inactive")
+  persistence_comparison(tmax_humidity, tmax_humidity_y)
+  persistence_comparison(tmax_speed, tmax_speed_y)
+  persistence_comparison(tmean_humidity, tmean_humidity_y)
+  persistence_comparison(tmean_fwi, tmean_fwi_y)
+  
+  # plot_clusters(tmax_humidity,"active")
+  # plot_clusters(tmax_humidity_y,"active")
+  # plot_clusters(tmax_speed,"active")
+  # plot_clusters(tmax_speed_y,"active")
+  # plot_clusters(tmean_humidity,"active")
+  # plot_clusters(tmean_humidity_y,"active")
+  # plot_clusters(tmean_fwi,"active")
+  # plot_clusters(tmean_fwi_y,"active")
+  
+  returnData(tmax_humidity)
+}
 ## FUNCTIONS ####################################################################
 
 
@@ -225,6 +231,7 @@ mapper_graph <- function(data, type){
   
   data.mapper2 <- mapper2D(
     distance_matrix = dist(data.frame( x=data[,1], y=data[,2] )),
+    filter_values = list(data[,1],data[,2]),
     num_intervals = c(5,5),
     percent_overlap = 60,
     num_bins_when_clustering = 60)
@@ -234,12 +241,14 @@ mapper_graph <- function(data, type){
   vertex.size <- rep(0,data.mapper2$num_vertices)
   vertex.size.var1 <- rep(0,data.mapper2$num_vertices)
   vertex.size.var2 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var9 <- rep(0,data.mapper2$num_vertices)
   for (i in 1:data.mapper2$num_vertices){
     points.in.vertex <- data.mapper2$points_in_vertex[[i]]
     len <- length(points.in.vertex)
     count <- 0
     count1 <- 0
     count2 <- 0
+    count9 <- 0
     for (j in 1:len){
       if (!is.na(data[points.in.vertex[[j]],3])){
         if (data[points.in.vertex[[j]],3]>=50){
@@ -252,6 +261,9 @@ mapper_graph <- function(data, type){
       if (!is.na(data[points.in.vertex[[j]],1])){
         count2 <- count2 + data[points.in.vertex[[j]],1]
       }
+      if (!is.na(data[points.in.vertex[[j]],9])){
+        count9 <- count9 + 1
+      }
     }
     if (count <= 5){
       print(count)
@@ -259,20 +271,35 @@ mapper_graph <- function(data, type){
     } else{
       count <- count/20
     }
-    vertex.size[i] <- count
-    vertex.size.var1[i] <- (count1)*1.5
-    vertex.size.var2[i] <- (count2)*1.5
+    vertex.size[i] <- count*0.3
+    vertex.size.var1[i] <- (count1)*0.3
+    vertex.size.var2[i] <- (count2)*0.3
+    vertex.size.var9[i] <- (count9)*0.1
   }
   
   l <- layout.auto(data.graph)
-  plot(data.graph, main = paste(type, "summers - size based on fire count"), 
-       vertex.label = NA, cex.main=0.5, horizontal=TRUE, vertex.size = vertex.size, layout = l)
+  plot(data.graph, main = paste(type, "summers - size based on fire count"), vertex.label = NA,
+       cex.main=0.5, horizontal=TRUE, vertex.size = vertex.size, layout = l)
+
   plot(data.graph, main = paste(type, "summers - size based on", colnames(data)[[1]]), 
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, vertex.size = abs(vertex.size.var1)+5, layout = l,
-       vertex.color = ifelse(vertex.size.var2 > 0, "red", ifelse(vertex.size.var2 < 0,"blue", "black")))
+       vertex.color = ifelse(vertex.size.var1 > 0, "red", ifelse(vertex.size.var1 < 0,"blue", "black")))
+  
   plot(data.graph, main = paste(type, "summers - size based on", colnames(data)[[2]]), 
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, vertex.size = abs(vertex.size.var2)+5, layout = l,
        vertex.color = ifelse(vertex.size.var1 > 0, "red", ifelse(vertex.size.var1 < 0,"blue", "black")))
+  
+  plot(data.graph, main = paste(type, "summers - size based on", colnames(data)[[9]]), 
+       vertex.label = ifelse(vertex.size.var9 > 1, vertex.size.var9, ""), cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var9)+5, layout = l,vertex.color = ifelse(vertex.size.var9 > 0, "red", 
+       ifelse(vertex.size.var9 < 0,"blue", "black")))
+  
+  plot(data.graph, main = paste(type, "summers - size based on", colnames(data)[[9]]), 
+       vertex.label = ifelse(vertex.size.var9 > 1, 1:data.mapper2$num_vertices, ""), cex.main=0.5,
+       vertex.size = abs(vertex.size.var9)+5, layout = l,vertex.color = ifelse(vertex.size.var9 > 0, "red", 
+       ifelse(vertex.size.var9 < 0,"blue", "black")),vertex.label.cex=0.7, horizontal=TRUE)
+  
+  View(vertex.size.var9)
 }
 
 #rips persistence using kde, knnDE, and dtm for confidence band
