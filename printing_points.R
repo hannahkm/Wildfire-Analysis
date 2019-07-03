@@ -1,8 +1,8 @@
 setwd(
   "/Users/hk/Desktop/School/MRHS/11th\ Grade/R/NN-ML/Wildfire-NN-ML/ML_Data/Old\ Data"
 )
-data <- read.csv("C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_active_calfire_jja.csv")[, 
-                              c("t2mmax", "qv2m", "fcount_aqua", "year", "month", "day")] #2,8
+data <- read.csv("C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_active_calfire_jja.csv")[, c("t2mmax", 
+                                          "qv2m", "fcount_aqua", "year", "month", "day")] #2,8
 
 data.dist <- dist(data[, c(1, 2)])
 par(mfrow = c(1, 1))
@@ -20,11 +20,12 @@ data.graph <-
 
 vertex.size <- rep(0, data.mapper2$num_vertices)
 df <- as.data.frame(matrix(ncol = 3))
-values <- rep(".", nrow(data))
-data <- cbind(data, values)
-colnames(data)[[ncol(data)]] <- "cluster"
+# values <- rep(".", nrow(data))
+# data <- cbind(data, values)
+# colnames(data)[[ncol(data)]] <- "cluster"
 
 for (i in 1:data.mapper2$num_vertices) {
+  print(i)
   points.in.vertex <- data.mapper2$points_in_vertex[[i]]
   len <- length(points.in.vertex)
   count <- 0
@@ -37,9 +38,9 @@ for (i in 1:data.mapper2$num_vertices) {
         as.data.frame(cbind(data[points.in.vertex[[j]], 4], data[points.in.vertex[[j]], 5],
                             data[points.in.vertex[[j]], 6]))
       df <- rbind(df, df_add)
-      
-      print(data[points.in.vertex[[j]],ncol(data)])
-      data[points.in.vertex[[j]],ncol(data)] <- (paste0(data[points.in.vertex[[j]],ncol(data)], i))
+      print(data[points.in.vertex[[j]],])
+      # print(data[points.in.vertex[[j]],ncol(data)])
+      # data[points.in.vertex[[j]],ncol(data)] <- (paste0(data[points.in.vertex[[j]],ncol(data)], i))
     }
     # else if (is.na(data[points.in.vertex[[j]], 3]) && j == 1) {
     #   cat("vertex: ", i, " empty", "\n")
@@ -54,4 +55,6 @@ for (i in 1:data.mapper2$num_vertices) {
 df <- unique(df[order(df[, 1], df[, 2], df[, 3]), ])
 df <- df[-1,]
 print(nrow(df))
+
+
 
