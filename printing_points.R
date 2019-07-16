@@ -1,6 +1,3 @@
-setwd(
-  "/Users/hk/Desktop/School/MRHS/11th\ Grade/R/NN-ML/Wildfire-NN-ML/ML_Data/Old\ Data"
-)
 data <- read.csv("C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_active_calfire_jja.csv")[, c("t2mmax", 
                                           "qv2m", "fcount_aqua", "year", "month", "day")] #2,8
 
