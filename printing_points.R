@@ -19,13 +19,13 @@ data.graph <-
   graph.adjacency(data.mapper2$adjacency, mode = "undirected")
 
 vertex.size <- rep(0, data.mapper2$num_vertices)
-df <- as.data.frame(matrix(ncol = 3))
+df <- as.data.frame(matrix(ncol = 4))
 # values <- rep(".", nrow(data))
 # data <- cbind(data, values)
 # colnames(data)[[ncol(data)]] <- "cluster"
 
 for (i in 1:data.mapper2$num_vertices) {
-  print(i)
+  #print(i)
   points.in.vertex <- data.mapper2$points_in_vertex[[i]]
   len <- length(points.in.vertex)
   count <- 0
@@ -35,10 +35,12 @@ for (i in 1:data.mapper2$num_vertices) {
       # cat("vertex (i): ", i, " point # (j): ", j, " y-m-d: ", data[points.in.vertex[[j]],4],"-",
       #     data[points.in.vertex[[j]],5], "-", data[points.in.vertex[[j]],6], "\n")
       df_add <-
-        as.data.frame(cbind(data[points.in.vertex[[j]], 4], data[points.in.vertex[[j]], 5],
+        as.data.frame(cbind(data.frame(matrix(c(i))), data[points.in.vertex[[j]], 4], 
+                            data[points.in.vertex[[j]], 5],
                             data[points.in.vertex[[j]], 6]))
+      colnames(df_add) <- colnames(df)
       df <- rbind(df, df_add)
-      print(data[points.in.vertex[[j]],])
+      #print(data[points.in.vertex[[j]],])
       # print(data[points.in.vertex[[j]],ncol(data)])
       # data[points.in.vertex[[j]],ncol(data)] <- (paste0(data[points.in.vertex[[j]],ncol(data)], i))
     }
