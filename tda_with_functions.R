@@ -22,29 +22,29 @@ setwd("/Volumes/HKIM/TDA/")
 #setwd("E:\\TDA")
 setwd("/Users/hk/Desktop/School/MRHS/11th\ Grade/R/NN-ML/Wildfire-NN-ML/ML_Data/Old\ Data")
 
-tmax_humidity <- read.csv("C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_active_calfire_jja.csv")[,
-                  c("t2mmax", "qv2m", "fcount_aqua","fwi","isi","bui","dc","speed","t2m")] #2,8
+tmax_humidity <- read.csv("C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_active_calfire_jja.csv")[,c("t2mmax", "qv2m",
+                                                                                                                     "fcount_aqua")]
 if (true){
-  tmax_humidity_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("t2mmax", "qv2m",
+  tmax_humidity_y <- read.csv("C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_inactive_calfire_jja.csv")[,c("t2mmax", "qv2m",
                                                                     "fcount_aqua")]
-  tmax_speed <- read.csv("merra2_active_calfire_jja.csv")[,c("t2mmax", "speed",
+  tmax_speed <- read.csv("C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_active_calfire_jja.csv")[,c("t2mmax", "speed",
                                                              "fcount_aqua")] #2,10
-  tmax_speed_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("t2mmax", "speed",
+  tmax_speed_y <- read.csv("C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_inactive_calfire_jja.csv")[,c("t2mmax", "speed",
                                                                  "fcount_aqua")]
   
-  tmean_humidity <- read.csv("merra2_active_calfire_jja.csv")[,c("dc","qv2m",
+  tmean_humidity <- read.csv("C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_active_calfire_jja.csv")[,c("dc","qv2m",
                                                                  "fcount_aqua")] #6,8
-  tmean_humidity_y <- read.csv("merra2_inactive_calfire_jja.csv")[,c("dc","qv2m",
+  tmean_humidity_y <- read.csv("C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_inactive_calfire_jja.csv")[,c("dc","qv2m",
                                                                      "fcount_aqua")]
   tmean_fwi <- read.csv(
-    "merra2_active_calfire_jja.csv")[,c("t2m","fwi","fcount_aqua")] #6,12
+    "C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_active_calfire_jja.csv")[,c("t2m","fwi","fcount_aqua")] #6,12
   tmean_fwi_y <- read.csv(
-    "merra2_inactive_calfire_jja.csv")[,c("t2m","fwi","fcount_aqua")]
+    "C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_inactive_calfire_jja.csv")[,c("t2m","fwi","fcount_aqua")]
   
   bui_dc <- read.csv(
-    "merra2_active_calfire_jja.csv")[,c("bui","dc","fcount_aqua")]
+    "C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_active_calfire_jja.csv")[,c("bui","dc","fcount_aqua")]
   bui_dc_y <- read.csv(
-    "merra2_inactive_calfire_jja.csv")[,c("bui","dc","fcount_aqua")]
+    "C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_inactive_calfire_jja.csv")[,c("bui","dc","fcount_aqua")]
 }
 
 mapper_graph(tmax_humidity, "active")
@@ -67,6 +67,9 @@ if (true){
 if (true){
   rips_persistence(tmax_humidity)
   rips_persistence(tmax_humidity_y)
+  persistence_comparison(tmax_speed, tmax_speed_y)
+  #persistence_comparison(tmean_humidity, tmean_humidity_y)
+  persistence_comparison(tmean_fwi, tmean_fwi_y)
   #persistence_comparison(tmax_humidity, tmax_humidity_y)
   
   rips_persistence(tmax_speed)
@@ -226,12 +229,12 @@ radius_plots <- function(data, radius, type){
 }
 
 mapper_graph <- function(data, type){
-  data.dist <- dist(data[,c(1,2)])
+  data.dist <- dist(data[,c("t2mmax","qv2m")])
   par(mfrow=c(1,1))
   
   data.mapper2 <- mapper2D(
-    distance_matrix = dist(data.frame( x=data[,1], y=data[,2] )),
-    filter_values = list(data[,1],data[,2]),
+    distance_matrix = dist(data.frame( x=data$t2mmax, y=data$qv2m )),
+    filter_values = list(data$t2mmax,data$qv2m),
     num_intervals = c(5,5),
     percent_overlap = 60,
     num_bins_when_clustering = 60)
@@ -241,28 +244,98 @@ mapper_graph <- function(data, type){
   vertex.size <- rep(0,data.mapper2$num_vertices)
   vertex.size.var1 <- rep(0,data.mapper2$num_vertices)
   vertex.size.var2 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var3 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var4 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var5 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var6 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var7 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var8 <- rep(0,data.mapper2$num_vertices)
   vertex.size.var9 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var10 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var11 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var12 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var13 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var14 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var15 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var16 <- rep(0,data.mapper2$num_vertices)
+  vertex.size.var17 <- rep(0,data.mapper2$num_vertices)
   for (i in 1:data.mapper2$num_vertices){
     points.in.vertex <- data.mapper2$points_in_vertex[[i]]
     len <- length(points.in.vertex)
     count <- 0
     count1 <- 0
     count2 <- 0
+    count3 <- 0
+    count4 <- 0
+    count5 <- 0
+    count6 <- 0
+    count7 <- 0
+    count8 <- 0
     count9 <- 0
+    count10 <- 0
+    count11 <- 0
+    count12 <- 0
+    count13 <- 0
+    count14 <- 0
+    count15 <- 0
+    count16 <- 0
+    count17 <- 0
     for (j in 1:len){
-      if (!is.na(data[points.in.vertex[[j]],3])){
-        if (data[points.in.vertex[[j]],3]>=50){
-          count <- count + abs(data[points.in.vertex[[j]],3])
+      if (!is.na(data[points.in.vertex[[j]],"fcount_aqua"])){
+        if (data[points.in.vertex[[j]],"fcount_aqua"]>=50){
+          count <- count + abs(data[points.in.vertex[[j]],"fcount_aqua"])
         }
       }
-      if (!is.na(data[points.in.vertex[[j]],2])){
-        count1 <- count1 + data[points.in.vertex[[j]],2]
-      }
       if (!is.na(data[points.in.vertex[[j]],1])){
-        count2 <- count2 + data[points.in.vertex[[j]],1]
+        count1 <- count1 + data[points.in.vertex[[j]],1]
+      }
+      if (!is.na(data[points.in.vertex[[j]],2])){
+        count2 <- count2 + data[points.in.vertex[[j]],2]
+      }
+      if (!is.na(data[points.in.vertex[[j]],3])){
+        count3 <- count3 + data[points.in.vertex[[j]],3]
+      }
+      if (!is.na(data[points.in.vertex[[j]],4])){
+        count4 <- count4 + data[points.in.vertex[[j]],4]
+      }
+      if (!is.na(data[points.in.vertex[[j]],5])){
+        count5 <- count5 + data[points.in.vertex[[j]],5]
+      }
+      if (!is.na(data[points.in.vertex[[j]],6])){
+        count6 <- count6 + data[points.in.vertex[[j]],6]
+      }
+      if (!is.na(data[points.in.vertex[[j]],7])){
+        count7 <- count7 + data[points.in.vertex[[j]],7]
+      }
+      if (!is.na(data[points.in.vertex[[j]],8])){
+        count8 <- count8 + data[points.in.vertex[[j]],8]
       }
       if (!is.na(data[points.in.vertex[[j]],9])){
-        count9 <- count9 + 1
+        count9 <- count9 + data[points.in.vertex[[j]],9]
+      }
+      if (!is.na(data[points.in.vertex[[j]],10])){
+        count10 <- count10 + data[points.in.vertex[[j]],10]
+      }
+      if (!is.na(data[points.in.vertex[[j]],11])){
+        count11 <- count11 + data[points.in.vertex[[j]],11]
+      }
+      if (!is.na(data[points.in.vertex[[j]],12])){
+        count12 <- count12 + data[points.in.vertex[[j]],12]
+      }
+      if (!is.na(data[points.in.vertex[[j]],13])){
+        count13 <- count13 + data[points.in.vertex[[j]],13]
+      }
+      if (!is.na(data[points.in.vertex[[j]],14])){
+        count14 <- count14 + data[points.in.vertex[[j]],14]
+      }
+      if (!is.na(data[points.in.vertex[[j]],15])){
+        count15 <- count15 + data[points.in.vertex[[j]],15]
+      }
+      if (!is.na(data[points.in.vertex[[j]],16])){
+        count16 <- count16 + data[points.in.vertex[[j]],16]
+      }
+      if (!is.na(data[points.in.vertex[[j]],17])){
+        count17 <- count17 + data[points.in.vertex[[j]],17]
       }
     }
     if (count <= 5){
@@ -274,31 +347,146 @@ mapper_graph <- function(data, type){
     vertex.size[i] <- count*0.1
     vertex.size.var1[i] <- (count1)*0.3
     vertex.size.var2[i] <- (count2)*0.3
-    vertex.size.var9[i] <- (count9)*0.1
+    vertex.size.var3[i] <- (count3)*0.3
+    vertex.size.var4[i] <- (count4)*0.3
+    vertex.size.var5[i] <- (count5)*0.3
+    vertex.size.var6[i] <- (count6)*0.3
+    vertex.size.var7[i] <- (count7)*0.3
+    vertex.size.var8[i] <- (count8)*0.3
+    vertex.size.var9[i] <- (count9)*0.3
+    vertex.size.var10[i] <- (count10)*0.3
+    vertex.size.var11[i] <- (count11)*0.3
+    vertex.size.var12[i] <- (count12)*0.3
+    vertex.size.var13[i] <- (count13)*0.3
+    vertex.size.var14[i] <- (count14)*0.3
+    vertex.size.var15[i] <- (count15)*0.3
+    vertex.size.var16[i] <- (count16)*0.3
+    vertex.size.var17[i] <- (count17)*0.3
   }
   
   l <- layout.auto(data.graph)
-  plot(data.graph, main = paste(type, "summers - size based on fire count"), vertex.label = NA,
+  plot(data.graph, main = paste(type, "summers - size based \n on fire count"), 
+       vertex.label = NA,
        cex.main=0.5, horizontal=TRUE, vertex.size = vertex.size, layout = l)
 
-  plot(data.graph, main = paste(type, "summers - size based on", colnames(data)[[1]]), 
-       vertex.label = NA, cex.main=0.5, horizontal=TRUE, vertex.size = abs(vertex.size.var1)+5, layout = l,
-       vertex.color = ifelse(vertex.size.var1 > 0, "red", ifelse(vertex.size.var1 < 0,"blue", "black")))
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[1]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var1)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var1 > 0, "red", 
+                             ifelse(vertex.size.var1 < 0,"blue", "black")))
   
-  plot(data.graph, main = paste(type, "summers - size based on", colnames(data)[[2]]), 
-       vertex.label = NA, cex.main=0.5, horizontal=TRUE, vertex.size = abs(vertex.size.var2)+5, layout = l,
-       vertex.color = ifelse(vertex.size.var1 > 0, "red", ifelse(vertex.size.var1 < 0,"blue", "black")))
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[2]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var2)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var2 > 0, "red", 
+                             ifelse(vertex.size.var2 < 0,"blue", "black")))
   
-  plot(data.graph, main = paste(type, "summers - size based on", colnames(data)[[9]]), 
-       vertex.label = ifelse(vertex.size.var9 > 1, vertex.size.var9, ""), cex.main=0.5, horizontal=TRUE, 
-       vertex.size = abs(vertex.size.var9)+5, layout = l,vertex.color = ifelse(vertex.size.var9 > 0, "red", 
-       ifelse(vertex.size.var9 < 0,"blue", "black")))
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[3]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var3)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var3 > 0, "red", 
+                             ifelse(vertex.size.var3 < 0,"blue", "black")))
   
-  plot(data.graph, main = paste(type, "summers - size based on", colnames(data)[[9]]), 
-       vertex.label = ifelse(vertex.size.var9 > 1, 1:data.mapper2$num_vertices, ""), cex.main=0.5,
-       vertex.size = abs(vertex.size.var9)+5, layout = l,vertex.color = ifelse(vertex.size.var9 > 0, "red", 
-       ifelse(vertex.size.var9 < 0,"blue", "black")),vertex.label.cex=0.7, horizontal=TRUE)
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[4]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var4)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var4 > 0, "red", 
+                             ifelse(vertex.size.var4 < 0,"blue", "black")))
   
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[5]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var5)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var5 > 0, "red", 
+                             ifelse(vertex.size.var5 < 0,"blue", "black")))
+  
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[6]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var6)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var6 > 0, "red", 
+                             ifelse(vertex.size.var6 < 0,"blue", "black")))
+  
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[7]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var7)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var7 > 0, "red", 
+                             ifelse(vertex.size.var7 < 0,"blue", "black")))
+  
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[8]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var8)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var8 > 0, "red", 
+                             ifelse(vertex.size.var8 < 0,"blue", "black")))
+  
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[9]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var9)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var9 > 0, "red", 
+                             ifelse(vertex.size.var9 < 0,"blue", "black")))
+  
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[10]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var10)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var10 > 0, "red", 
+                             ifelse(vertex.size.var10 < 0,"blue", "black")))
+  
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[11]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var11)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var11 > 0, "red", 
+                             ifelse(vertex.size.var11 < 0,"blue", "black")))
+  
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[12]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var12)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var12 > 0, "red", 
+                             ifelse(vertex.size.var12 < 0,"blue", "black")))
+  
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[13]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var13)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var13 > 0, "red", 
+                             ifelse(vertex.size.var13 < 0,"blue", "black")))
+  
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[14]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var14)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var14 > 0, "red", 
+                             ifelse(vertex.size.var14 < 0,"blue", "black")))
+  
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[15]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var15)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var15 > 0, "red", 
+                             ifelse(vertex.size.var15 < 0,"blue", "black")))
+  
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[16]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var16)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var16 > 0, "red", 
+                             ifelse(vertex.size.var16 < 0,"blue", "black")))
+  
+  plot(data.graph, main = paste(type, "summers - size based \n on", 
+                                colnames(data)[[17]]), 
+       vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
+       vertex.size = abs(vertex.size.var17)+5, layout = l,
+       vertex.color = ifelse(vertex.size.var17 > 0, "red", 
+                             ifelse(vertex.size.var17 < 0,"blue", "black")))
 }
 
 #rips persistence using kde, knnDE, and dtm for confidence band
@@ -325,9 +513,9 @@ rips_persistence <- function(data){
   #        col=c("black", "red", "blue"),
   #        title = "Legend")
   
-  df <- printList(Diag)
-  
-  df
+  # df <- printList(Diag)
+  # 
+  # df
 }
 
 #barcode diagram for data
