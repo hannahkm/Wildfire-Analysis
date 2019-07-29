@@ -271,7 +271,7 @@ mapper_graph <- function(data, type){
     } else{
       count <- count/20
     }
-    vertex.size[i] <- count*0.3
+    vertex.size[i] <- count*0.1
     vertex.size.var1[i] <- (count1)*0.3
     vertex.size.var2[i] <- (count2)*0.3
     vertex.size.var9[i] <- (count9)*0.1
@@ -299,7 +299,6 @@ mapper_graph <- function(data, type){
        vertex.size = abs(vertex.size.var9)+5, layout = l,vertex.color = ifelse(vertex.size.var9 > 0, "red", 
        ifelse(vertex.size.var9 < 0,"blue", "black")),vertex.label.cex=0.7, horizontal=TRUE)
   
-  View(vertex.size.var9)
 }
 
 #rips persistence using kde, knnDE, and dtm for confidence band
