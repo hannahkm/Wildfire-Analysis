@@ -2,9 +2,9 @@ library(ggplot2)
 library(MASS)
 library(gridExtra)
 
-#install.packages(pkgs = "FNN")
-#install.packages(pkgs = "igraph")
-#install.packages(pkgs = "scales")
+install.packages(pkgs = "FNN")
+install.packages(pkgs = "igraph")
+install.packages(pkgs = "scales")
 
 library("FNN")
 library("igraph")
@@ -27,8 +27,10 @@ setwd("C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data")
 # ISI (15) BUI(16)
 # Wind speed (10) DC(14)
 # DC(14) Tmax(2)
-X1 <- read.csv("/Users/hk/Desktop/School/MRHS/11th\ Grade/R/NN-ML/Wildfire-NN-ML/ML_Data/Old\ Data/merra2_active_calfire_jja.csv")[,c(2,8)]
-Y1 <- read.csv("/Users/hk/Desktop/School/MRHS/11th\ Grade/R/NN-ML/Wildfire-NN-ML/ML_Data/Old\ Data/merra2_inactive_calfire_jja.csv")[,c(2,8)]
+
+#/Users/hk/Desktop/School/MRHS/11th\ Grade/R/NN-ML/Wildfire-NN-ML/ML_Data/Old\ Data/
+X1 <- read.csv("merra2_active_calfire_jja.csv")[,c(2,8)]
+Y1 <- read.csv("merra2_inactive_calfire_jja.csv")[,c(2,8)]
 plot(X1)
 
 ######
