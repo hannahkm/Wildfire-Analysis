@@ -31,7 +31,7 @@ setwd("C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data")
 #/Users/hk/Desktop/School/MRHS/11th\ Grade/R/NN-ML/Wildfire-NN-ML/ML_Data/Old\ Data/
 X1 <- read.csv("merra2_active_calfire_jja.csv")[,c(2,8)]
 Y1 <- read.csv("merra2_inactive_calfire_jja.csv")[,c(2,8)]
-plot(X1)
+plot(X1, family = "serif")
 
 ######
 require(gridExtra)
@@ -50,10 +50,10 @@ plot1 <- ggplot(data=X1, aes(X1[,1], X1[,2])) +
   commonTheme
 plot1  + labs(title="Active Summer",
               x ="Tmax", y = "Qa") + theme(
-                axis.text = element_text(color="black", size=16),
-                plot.title = element_text(color="black", size=26, hjust=0.5),
-                axis.title.x = element_text(color="black", size=24),
-                axis.title.y = element_text(color="black", size=24)
+                axis.text = element_text(color="black", size=16, family = "serif"),
+                plot.title = element_text(color="black", size=26, hjust=0.5, family = "serif"),
+                axis.title.x = element_text(color="black", size=24, family = "serif"),
+                axis.title.y = element_text(color="black", size=24, family = "serif")
               )
 dev.off()
 
@@ -66,10 +66,10 @@ plot2 <- ggplot(data=Y1, aes(Y1[,1], Y1[,2])) +
   commonTheme
 plot2  + labs(title="Inactive Summer",
               x ="Tmax", y = "Qa") + theme(
-                axis.text = element_text(color="black", size=16),
-                plot.title = element_text(color="black", size=30, hjust=0.5),
-                axis.title.x = element_text(color="black", size=24),
-                axis.title.y = element_text(color="black", size=24)
+                axis.text = element_text(color="black", size=16, family = "serif"),
+                plot.title = element_text(color="black", size=30, hjust=0.5, family = "serif"),
+                axis.title.x = element_text(color="black", size=24, family = "serif"),
+                axis.title.y = element_text(color="black", size=24, family = "serif")
               ) 
 dev.off()
 
@@ -226,8 +226,8 @@ Diag1 <- gridDiag(X1, FUN = kde, lim = cbind(Xlim, Ylim), by = by,
 Diag2 <- gridDiag(X1, FUN = kde, lim = cbind(Xlim, Ylim), by = by, 
                   sublevel = FALSE, library = "Dionysus", printProgress = FALSE, h = 0.2)
 par(mfrow = c(1,2)) 
-plot(Diag1[["diagram"]], main = "FUN=kde (h=0.1)")
-plot(Diag2[["diagram"]], main = "FUN=kde (h=0.2)")
+plot(Diag1[["diagram"]], main = "FUN=kde (h=0.1)", family = "serif")
+plot(Diag2[["diagram"]], main = "FUN=kde (h=0.2)", family = "serif")
 dev.off()
 
 
@@ -236,8 +236,8 @@ Diag1 <- gridDiag(X1, FUN = knnDE, k = 20, lim = cbind(Xlim, Ylim), by = by,
 Diag2 <- gridDiag(X1, FUN = knnDE, k = 30, lim = cbind(Xlim, Ylim), by = by, 
                   sublevel = FALSE, library = "Dionysus", printProgress = TRUE)
 par(mfrow = c(1,2)) 
-plot(Diag1[["diagram"]], main = "FUN=knnDE (k=20)")
-plot(Diag2[["diagram"]], main = "FUN=knnDE (k=30)")
+plot(Diag1[["diagram"]], main = "FUN=knnDE (k=20)", family = "serif")
+plot(Diag2[["diagram"]], main = "FUN=knnDE (k=30)", family = "serif")
 dev.off()
 
 Diag1 <- gridDiag(Y1, FUN = kde, lim = cbind(Xlim, Ylim), by = by, 
@@ -245,8 +245,8 @@ Diag1 <- gridDiag(Y1, FUN = kde, lim = cbind(Xlim, Ylim), by = by,
 Diag2 <- gridDiag(Y1, FUN = kde, lim = cbind(Xlim, Ylim), by = by, 
                   sublevel = FALSE, library = "Dionysus", printProgress = FALSE, h = 0.2)
 par(mfrow = c(1,2)) 
-plot(Diag1[["diagram"]], main = "FUN=kde (h=0.1)")
-plot(Diag2[["diagram"]], main = "FUN=kde (h=0.2)")
+plot(Diag1[["diagram"]], main = "FUN=kde (h=0.1)", family = "serif")
+plot(Diag2[["diagram"]], main = "FUN=kde (h=0.2)", family = "serif")
 dev.off()
 
 
@@ -255,8 +255,8 @@ Diag1 <- gridDiag(Y1, FUN = knnDE, k = 20, lim = cbind(Xlim, Ylim), by = by,
 Diag2 <- gridDiag(Y1, FUN = knnDE, k = 30, lim = cbind(Xlim, Ylim), by = by, 
                   sublevel = FALSE, library = "Dionysus", printProgress = TRUE)
 par(mfrow = c(1,2)) 
-plot(Diag1[["diagram"]], main = "FUN=knnDE (k=20)")
-plot(Diag2[["diagram"]], main = "FUN=knnDE (k=30)")
+plot(Diag1[["diagram"]], main = "FUN=knnDE (k=20)", family = "serif")
+plot(Diag2[["diagram"]], main = "FUN=knnDE (k=30)", family = "serif")
 dev.off()
 
 Diag1 <- gridDiag(X1, FUN = kde, lim = cbind(Xlim, Ylim), by = by, 
@@ -265,8 +265,8 @@ Diag1 <- gridDiag(X1, FUN = kde, lim = cbind(Xlim, Ylim), by = by,
 Diag2 <- gridDiag(X1, FUN = knnDE, k = 20, lim = cbind(Xlim, Ylim), by = by, 
                   sublevel = FALSE, library = "Dionysus", printProgress = TRUE)
 par(mfrow = c(1,2)) 
-plot(Diag1[["diagram"]])
-plot(Diag2[["diagram"]])
+plot(Diag1[["diagram"]], family = "serif")
+plot(Diag2[["diagram"]], family = "serif")
 ###
 Xlim <- c(-2.6, 2.55) 
 Ylim <- c(-2.6, 2.55) 
@@ -291,8 +291,8 @@ cc2 <- bootstrapDiagram(Y1, kde, lim = cbind(Xlim, Ylim), by = by, sublevel = FA
                         alpha = alpha, dimension = 1, printProgress = TRUE, h = 0.1)
 
 par(mfrow = c(1,2)) 
-plot(Diag1[["diagram"]], band = 2 * cc1, main = "Active Summer")
-plot(Diag2[["diagram"]], band = 2 * cc2, main = "Inactive Summer")
+plot(Diag1[["diagram"]], band = 2 * cc1, main = "Active Summer", family = "serif")
+plot(Diag2[["diagram"]], band = 2 * cc2, main = "Inactive Summer", family = "serif")
 dev.off()
 
 # Silhouette (Not working)
@@ -301,30 +301,32 @@ tseq <- seq(0, 1, length = 1000)
 Sil <- silhouette(Diag1[["diagram"]], p = 1, dimension = 1, tseq = tseq) 
 par(mfrow=c(1,1)) 
 plot(tseq, Sil, type = "l", main="Silhouette (p = 1), dim = 1", ylab = "", 
-     asp = 1, col = "red", lwd = 3)
+     asp = 1, col = "red", lwd = 3, family = "serif")
 
 # Ref) Statistical Topological Data Analysis using Persistence Landscapes by Bubenik
 Land1 <- landscape(Diag1[["diagram"]], dimension = 1, KK = 1, tseq = tseq) 
 Land2 <- landscape(Diag2[["diagram"]], dimension = 1, KK = 1, tseq = tseq) 
 par(mfrow=c(2,1)) 
 plot(tseq, Land1, type = "l", main = "1st Landscape, dim = 1", ylab = "", 
-     asp = 1, col = "red", lwd = 3)
+     asp = 1, col = "red", lwd = 3, family = "serif")
 plot(tseq, Land2, type = "l", main = "1st Landscape, dim = 1", ylab = "", 
-     asp = 1, col = "red", lwd = 3)
+     asp = 1, col = "red", lwd = 3, family = "serif")
 ########################################################################## 
 # plotting persistence diagram 
 ########################################################################## 
 par(mfrow = c(1,1)) 
-plot(x = Diag[["diagram"]], band = 2 * band[["width"]], main = "KDE Diagram")
+plot(x = Diag[["diagram"]], band = 2 * band[["width"]], main = "KDE Diagram"
+     , family = "serif")
 dev.off()
 ########################################################################## 
 # other options for plotting persistence diagram 
 ########################################################################## 
 par(mfrow = c(1,2)) 
-plot(Diag[["diagram"]], band = 2 * band[["width"]], main = "KDE Diagram") 
+plot(Diag[["diagram"]], band = 2 * band[["width"]], main = "KDE Diagram"
+     , family = "serif") 
 plot(Diag[["diagram"]], rotated = TRUE, band = band[["width"]], 
-     main = "Rotated Diagram")
-plot(Diag[["diagram"]], barcode = TRUE, main = "Barcode")
+     main = "Rotated Diagram", family = "serif")
+plot(Diag[["diagram"]], barcode = TRUE, main = "Barcode", family = "serif")
 
 ########################################################################## 
 # Rips persistence diagram 
@@ -335,30 +337,30 @@ Diag2 <- ripsDiag(Y1, maxdimension = 2, maxscale = 1.0,
                   library = "GUDHI", printProgress = FALSE)
 
 par(mfrow=c(2,2)) 
-plot(Diag1[["diagram"]], main = "Active Summer (Tmax vs Qa)")
-plot(Diag2[["diagram"]], main = "Inactive Summer (Tmax vs Qa)")
-plot(Diag1[["diagram"]], barcode =TRUE)
-plot(Diag2[["diagram"]], barcode =TRUE)
+plot(Diag1[["diagram"]], main = "Active Summer (Tmax vs Qa)", family = "serif")
+plot(Diag2[["diagram"]], main = "Inactive Summer (Tmax vs Qa)", family = "serif")
+plot(Diag1[["diagram"]], barcode =TRUE, family = "serif")
+plot(Diag2[["diagram"]], barcode =TRUE, family = "serif")
 dev.off()
 
 
 par(mfrow=c(1,2)) 
-plot(Diag1[["diagram"]], main = "Rips (Tmax vs Qa)")
-plot(Diag1[["diagram"]], barcode =TRUE, main = "barcode (Active)")
+plot(Diag1[["diagram"]], main = "Rips (Tmax vs Qa)", family = "serif")
+plot(Diag1[["diagram"]], barcode =TRUE, main = "barcode (Active)", family = "serif")
 dev.off()
 
 
 par(mfrow=c(2,2)) 
-plot(Diag1[["diagram"]], main = "Active Summer")
-plot(Diag1[["diagram"]], rotated =TRUE, main = "Rotated")
-plot(Diag2[["diagram"]], main = "Inactive Summer")
-plot(Diag2[["diagram"]], rotated =TRUE, main = "Rotated")
+plot(Diag1[["diagram"]], main = "Active Summer", family = "serif")
+plot(Diag1[["diagram"]], rotated =TRUE, main = "Rotated", family = "serif")
+plot(Diag2[["diagram"]], main = "Inactive Summer", family = "serif")
+plot(Diag2[["diagram"]], rotated =TRUE, main = "Rotated", family = "serif")
 dev.off()
 
 
 par(mfrow=c(1,2)) 
-plot(Diag2[["diagram"]], main = "Rips (Tmax vs Qa)")
-plot(Diag2[["diagram"]], barcode =TRUE, main = "barcode (Inactive)")
+plot(Diag2[["diagram"]], main = "Rips (Tmax vs Qa)", family = "serif")
+plot(Diag2[["diagram"]], barcode =TRUE, main = "barcode (Inactive)", family = "serif")
 dev.off()
 
 print(bottleneck(Diag1 = Diag1[["diagram"]], Diag2 = Diag2[["diagram"]], 
@@ -386,8 +388,8 @@ Tree <- clusterTree(X1, k, density = "knn")
 TreeKDE <- clusterTree(X1,k, h = 0.1, density = "kde")
 par(mfrow = c(1, 2))
 # plot lambda trees
-plot(Tree, type = "lambda", main = "lambda Tree (knn)")
-plot(TreeKDE, type = "lambda", main = "lambda Tree (kde)")
+plot(Tree, type = "lambda", main = "lambda Tree (knn)", family = "serif")
+plot(TreeKDE, type = "lambda", main = "lambda Tree (kde)", family = "serif")
 
 # plot lambda trees for active season
 Tree <- clusterTree(X1, k = 20, density = "knn")
@@ -395,19 +397,21 @@ TreeKDE <- clusterTree(X1,k, h = 0.1, density = "kde")
 
 
 par(mfrow = c(1, 1))
-plot(Tree, type = "lambda", main = "lambda Tree (knn) Inactive Summer")
+plot(Tree, type = "lambda", main = "lambda Tree (knn) Inactive Summer", family = "serif")
 dev.off()
 
 par(mfrow = c(1, 1))
-plot(TreeKDE, type = "lambda", main = "lambda Tree (kde) Inactive Summer")
+plot(TreeKDE, type = "lambda", main = "lambda Tree (kde) Inactive Summer", family = "serif")
 dev.off()
 # plot lambda trees for inactive season
 Tree <- clusterTree(Y1, k = 20, density = "knn")
 TreeKDE <- clusterTree(Y1,k, h = 0.1, density = "kde")
 
-plot(Tree, type = "lambda", main = "lambda Tree (knn) Inactive Summer")
+plot(Tree, type = "lambda", main = "lambda Tree (knn) Inactive Summer",
+     family = "serif")
 
-plot(TreeKDE, type = "lambda", main = "lambda Tree (kde) Inactive Summer")
+plot(TreeKDE, type = "lambda", main = "lambda Tree (kde) Inactive Summer",
+     family = "serif")
 
 ##
 
@@ -418,34 +422,34 @@ Diag2 <- ripsDiag(Y1, maxdimension = 2, maxscale = 1.0,
 
 
 par(mfrow=c(2,2)) 
-plot(Diag1[["diagram"]], main = "Active Summer (Tmax vs Qa)")
-plot(Diag2[["diagram"]], main = "Inactive Summer (Tmax vs Qa)")
-plot(Diag1[["diagram"]], barcode =TRUE)
-plot(Diag2[["diagram"]], barcode =TRUE)
+plot(Diag1[["diagram"]], main = "Active Summer (Tmax vs Qa)", family = "serif")
+plot(Diag2[["diagram"]], main = "Inactive Summer (Tmax vs Qa)", family = "serif")
+plot(Diag1[["diagram"]], barcode =TRUE, family = "serif")
+plot(Diag2[["diagram"]], barcode =TRUE, family = "serif")
 
 
 par(mfrow=c(1,2)) 
-plot(Diag1[["diagram"]], main = "Rips (Tmax vs Qa)")
-plot(Diag1[["diagram"]], barcode =TRUE, main = "barcode (Active)")
+plot(Diag1[["diagram"]], main = "Rips (Tmax vs Qa)", family = "serif")
+plot(Diag1[["diagram"]], barcode =TRUE, main = "barcode (Active)", family = "serif")
 
 
 par(mfrow=c(2,2)) 
-plot(Diag1[["diagram"]], main = "Active Summer")
-plot(Diag1[["diagram"]], rotated =TRUE, main = "Rotated")
-plot(Diag2[["diagram"]], main = "Inactive Summer")
-plot(Diag2[["diagram"]], rotated =TRUE, main = "Rotated")
+plot(Diag1[["diagram"]], main = "Active Summer", family = "serif")
+plot(Diag1[["diagram"]], rotated =TRUE, main = "Rotated", family = "serif")
+plot(Diag2[["diagram"]], main = "Inactive Summer", family = "serif")
+plot(Diag2[["diagram"]], rotated =TRUE, main = "Rotated", family = "serif")
 
 
 par(mfrow=c(1,2)) 
-plot(Diag2[["diagram"]], main = "Rips (Tmax vs Qa)")
-plot(Diag2[["diagram"]], barcode =TRUE, main = "barcode (Inactive)")
+plot(Diag2[["diagram"]], main = "Rips (Tmax vs Qa)", family = "serif")
+plot(Diag2[["diagram"]], barcode =TRUE, main = "barcode (Inactive)", family = "serif")
 
 # Silhouette
 tseq <- seq(0, 1, length = 1000)
 Sil <- silhouette(Diag1[["diagram"]], p = 1, dimension = 1, tseq = tseq) 
 par(mfrow=c(1,1)) 
 plot(tseq, Sil, type = "l", main="Silhouette (p = 1), dim = 1", ylab = "", 
-     asp = 1, col = "red", lwd = 3)
+     asp = 1, col = "red", lwd = 3, family = "serif")
 
 # Ref Statistical Topological Data Analysis using Persistence Landscapes by Bubenik
 
@@ -453,9 +457,9 @@ Land1 <- landscape(Diag1[["diagram"]], dimension = 1, KK = 1, tseq = tseq)
 Land2 <- landscape(Diag2[["diagram"]], dimension = 1, KK = 1, tseq = tseq) 
 par(mfrow=c(2,1)) 
 plot(tseq, Land1, type = "l", main = "1st Landscape, dim = 1 (Active)", ylab = "", 
-     asp = 1, col = "red", lwd = 3)
+     asp = 1, col = "red", lwd = 3, family = "serif")
 plot(tseq, Land2, type = "l", main = "1st Landscape, dim = 1 (Inactive)", ylab = "", 
-     asp = 1, col = "red", lwd = 3)
+     asp = 1, col = "red", lwd = 3, family = "serif")
 
 ## From https://www.rdocumentation.org/packages/TDA/versions/1.6.2/topics/ripsDiag
 ## EXAMPLE 1: rips diagram for circles (euclidean distance)
@@ -469,14 +473,14 @@ DiagRips <- ripsDiag(
 
 # plot
 layout(matrix(c(1, 3, 2, 2), 2, 2))
-plot(X, cex = 0.5, pch = 19)
+plot(X, cex = 0.5, pch = 19, family = "serif")
 title(main = "Data")
-plot(DiagRips[["diagram"]])
+plot(DiagRips[["diagram"]], family = "serif")
 title(main = "rips Diagram")
 one <- which(
   DiagRips[["diagram"]][, 1] == 1 &
     DiagRips[["diagram"]][, 3] - DiagRips[["diagram"]][, 2] > 0.5)
-plot(X, col = 2, main = "Representative loop of data points")
+plot(X, col = 2, main = "Representative loop of data points", family = "serif")
 for (i in seq(along = one)) {
   for (j in seq_len(dim(DiagRips[["cycleLocation"]][[one[i]]])[1])) {
     lines(
@@ -499,8 +503,8 @@ print(DiagTri[["diagram"]])
 Diag <- ripsDiag(X = X2, maxdimension = 1, maxscale = 5, 
                  library = "GUDHI", printProgress = FALSE)
 par(mfrow=c(1,2)) 
-plot(Circles, xlab="", ylab="") 
-plot(Diag[["diagram"]])
+plot(Circles, xlab="", ylab="", family = "serif") 
+plot(Diag[["diagram"]], family = "serif")
 
 Diag1 <- ripsDiag(X = X1, maxdimension = 1, maxscale = 5) 
 Diag2 <- ripsDiag(X = Y1, maxdimension = 1, maxscale = 5) 
@@ -519,10 +523,10 @@ tseq <- seq(from = 0, to = 5, length = 1000) #domain
 Land <- landscape(Diag = Diag[["diagram"]], dimension = 1, KK = 1, tseq = tseq) 
 par(mfrow=c(1,1)) 
 plot(tseq, Land, type = "l", main = "1st Landscape, dim = 1", ylab = "", 
-     asp = 1, col = "red", lwd = 3)
+     asp = 1, col = "red", lwd = 3, family = "serif")
 
 tseq <- seq(from = 0, to = 5, length = 1000) #domain 
 Sil <- silhouette(Diag = Diag[["diagram"]], p = 1, dimension = 1, tseq = tseq) 
 par(mfrow=c(1,1)) 
 plot(tseq, Sil, type = "l", main="Silhouette (p = 1), dim = 1", ylab = "", 
-     asp = 1, col = "red", lwd = 3)
+     asp = 1, col = "red", lwd = 3, family = "serif")

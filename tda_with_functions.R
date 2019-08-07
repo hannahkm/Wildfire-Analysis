@@ -83,12 +83,12 @@ if (true){
   persistence_comparison(tmean_fwi, tmean_fwi_y)
   
   
-  radius_plots(tmax_humidity, 0, "active")
-  radius_plots(tmax_humidity, 0.1, "active")
-  radius_plots(tmax_humidity, 0.3, "active")
-  radius_plots(tmax_humidity, 0.6, "active")
-  radius_plots(tmax_humidity, 0.8, "active")
-  radius_plots(tmax_humidity_y, 0.3, "inactive")
+  radius_plots(tmax_humidity, 0, "active", family = "serif")
+  radius_plots(tmax_humidity, 0.1, "active", family = "serif")
+  radius_plots(tmax_humidity, 0.3, "active", family = "serif")
+  radius_plots(tmax_humidity, 0.6, "active", family = "serif")
+  radius_plots(tmax_humidity, 0.8, "active", family = "serif")
+  radius_plots(tmax_humidity_y, 0.3, "inactive", family = "serif")
   persistence_comparison(tmax_humidity, tmax_humidity_y)
   persistence_comparison(tmax_speed, tmax_speed_y)
   persistence_comparison(tmean_humidity, tmean_humidity_y)
@@ -137,7 +137,7 @@ plot_clusters <- function(data,type){
   View(data)
   plot(x1, y1, xlim=range(x1), ylim=range(y1), xlab = colnames(data)[1], 
        ylab=colnames(data)[2], pch=16, col=ifelse(data$color==0, "black", data$color),
-       cex=ifelse(data$color==0, 0.2,1.5)) 
+       cex=ifelse(data$color==0, 0.2,1.5), family = "serif") 
   
   # for (i in 1:length(x1)){
   #   for (j in i:length(y1)){
@@ -185,7 +185,7 @@ persistence_comparison <- function(data, data1){
   plot(active.x1, active.y1, xlim=range(active.x1), ylim=range(active.y1), xlab = "birth",
        ylab="death", pch = ifelse(df1[,1] == 1,18,19), col = 'red',
        main=paste("comparison of loops/voids in \n active and inactive seasons\n",
-                  colnames(data)[1], " and ", colnames(data1)[2]))
+                  colnames(data)[1], " and ", colnames(data1)[2]), family = "serif")
   #points(active.x1, active.y1, col='red', cex=0.5, pch=16)
   points(inactive.x1, inactive.y1, col='blue', pch=ifelse(df2[,1] == 1,18,19))
   segments(0,0,1,1, lwd=0.5)
@@ -203,7 +203,7 @@ radius_plots <- function(data, radius, type){
   
   par(mfrow=c(1,1))
   plot(x1, y1, xlim=range(x1), ylim=range(y1), xlab = colnames(data)[1], 
-       ylab=colnames(data)[2], pch=16,
+       ylab=colnames(data)[2], pch=16,family = "serif",
        main = paste("plot between", colnames(data)[1], "and\n", 
                     colnames(data)[2],"with radius", radius, "\n - ", type, "summer")) 
   points(x1, y1, col='black', cex=0.5, pch=16) 
@@ -366,123 +366,123 @@ mapper_graph <- function(data, type){
   
   l <- layout.auto(data.graph)
   plot(data.graph, main = paste(type, "summers - size based \n on fire count"), 
-       vertex.label = NA,
+       vertex.label = NA, family = "serif",
        cex.main=0.5, horizontal=TRUE, vertex.size = vertex.size, layout = l)
 
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[1]]), 
+                                colnames(data)[[1]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var1)+5, layout = l,
        vertex.color = ifelse(vertex.size.var1 > 0, "red", 
                              ifelse(vertex.size.var1 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[2]]), 
+                                colnames(data)[[2]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var2)+5, layout = l,
        vertex.color = ifelse(vertex.size.var2 > 0, "red", 
                              ifelse(vertex.size.var2 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[3]]), 
+                                colnames(data)[[3]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var3)+5, layout = l,
        vertex.color = ifelse(vertex.size.var3 > 0, "red", 
                              ifelse(vertex.size.var3 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[4]]), 
+                                colnames(data)[[4]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var4)+5, layout = l,
        vertex.color = ifelse(vertex.size.var4 > 0, "red", 
                              ifelse(vertex.size.var4 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[5]]), 
+                                colnames(data)[[5]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var5)+5, layout = l,
        vertex.color = ifelse(vertex.size.var5 > 0, "red", 
                              ifelse(vertex.size.var5 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[6]]), 
+                                colnames(data)[[6]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var6)+5, layout = l,
        vertex.color = ifelse(vertex.size.var6 > 0, "red", 
                              ifelse(vertex.size.var6 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[7]]), 
+                                colnames(data)[[7]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var7)+5, layout = l,
        vertex.color = ifelse(vertex.size.var7 > 0, "red", 
                              ifelse(vertex.size.var7 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[8]), 
+                                colnames(data)[8]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var8)+5, layout = l,
        vertex.color = ifelse(vertex.size.var8 > 0, "red", 
                              ifelse(vertex.size.var8 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[9]]), 
+                                colnames(data)[[9]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var9)+5, layout = l,
        vertex.color = ifelse(vertex.size.var9 > 0, "red", 
                              ifelse(vertex.size.var9 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[10]]), 
+                                colnames(data)[[10]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var10)+5, layout = l,
        vertex.color = ifelse(vertex.size.var10 > 0, "red", 
                              ifelse(vertex.size.var10 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[11]]), 
+                                colnames(data)[[11]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var11)+5, layout = l,
        vertex.color = ifelse(vertex.size.var11 > 0, "red", 
                              ifelse(vertex.size.var11 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[12]]), 
+                                colnames(data)[[12]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var12)+5, layout = l,
        vertex.color = ifelse(vertex.size.var12 > 0, "red", 
                              ifelse(vertex.size.var12 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[13]]), 
+                                colnames(data)[[13]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var13)+5, layout = l,
        vertex.color = ifelse(vertex.size.var13 > 0, "red", 
                              ifelse(vertex.size.var13 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[14]]), 
+                                colnames(data)[[14]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var14)+5, layout = l,
        vertex.color = ifelse(vertex.size.var14 > 0, "red", 
                              ifelse(vertex.size.var14 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[15]]), 
+                                colnames(data)[[15]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var15)+5, layout = l,
        vertex.color = ifelse(vertex.size.var15 > 0, "red", 
                              ifelse(vertex.size.var15 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[16]]), 
+                                colnames(data)[[16]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var16)+5, layout = l,
        vertex.color = ifelse(vertex.size.var16 > 0, "red", 
                              ifelse(vertex.size.var16 < 0,"blue", "black")))
   
   plot(data.graph, main = paste(type, "summers - size based \n on", 
-                                colnames(data)[[17]]), 
+                                colnames(data)[[17]]), family = "serif",
        vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
        vertex.size = abs(vertex.size.var17)+5, layout = l,
        vertex.color = ifelse(vertex.size.var17 > 0, "red", 
@@ -499,16 +499,15 @@ rips_persistence <- function(data){
   band <- bootstrapBand(X=data[,c(1,2)], FUN=kde, Grid=data[,c(1,2)], B=100,
                         parallel=FALSE, alpha = 0.1, h=0.3)
   plot(Diag, diagLim=NULL, dimension=NULL, col=NULL, rotated=FALSE, barcode=FALSE,
-       band=2*band[["width"]], lab.line=2.2, colorBand="pink",
+       band=2*band[["width"]], lab.line=2.2, colorBand="pink", family = "serif",
        colorBorder=NA, add = FALSE, cex.lab = 2.5, cex = 2.5,
        main= paste("persistence diagram with ", colnames(data)[1], "and \n", colnames(data)[2],
                    ": kde band"))
   
   plot(Diag, diagLim=NULL, dimension=NULL, col=NULL, rotated=FALSE, barcode=FALSE,
-       band=NULL, lab.line=2.2, colorBand="pink",
+       band=NULL, lab.line=2.2, colorBand="pink",family = "serif",
        colorBorder=NA, add = FALSE, cex.lab = 2.5, cex = 2.5,
-       main= paste("persistence diagram with ", colnames(data)[1], "and \n", colnames(data)[2],
-                   ": kde band"))
+       main= paste("persistence diagram with ", colnames(data)[1], "and \n", colnames(data)[2]))
   # legend("bottomright", legend=c("connection", "loops", "voids"), pch=c(16, 2, 5), 
   #        col=c("black", "red", "blue"),
   #        title = "Legend")
@@ -526,6 +525,7 @@ barcode_diag <- function(data){
   par(mfrow = c(1,1), mar=c(3,3,3,3))
   plot(Diag, diagLim=NULL, dimension=NULL, col=NULL, rotated=FALSE, barcode=TRUE, 
        band=NULL, lab.line=2.2, colorBand="pink", colorBorder=NA, add = FALSE, 
+       family = "serif",
        main=paste("barcode with ", colnames(data)[1], "and", colnames(data)[2]))
 }
 
@@ -537,7 +537,7 @@ scatterplot_diag <-function(data){
   par(mfrow = c(1,1), mar=c(3,3,3,3))
   plot(data[,1], data[,2], col=data$Color, xlab=colnames(data)[1], 
        ylab=colnames(data)[2], main=paste("scatterplot with", colnames(data)[1], "and", 
-                                          colnames(data)[2]))
+                                          colnames(data)[2]),family = "serif")
   
   
 }
@@ -549,9 +549,11 @@ lambda_trees <- function(data){
   
   
   par(mfrow = c(2,1), mar=c(2,3,2,2))
-  plot(Tree, type = "lambda", main = paste("lambda Tree (knn) ", colnames(data)[1], 
+  plot(Tree, type = "lambda", family = "serif",
+       main = paste("lambda Tree (knn) ", colnames(data)[1], 
                                            "and", colnames(data)[2]))
-  plot(TreeKDE, type = "lambda", main = paste("lambda Tree (kde) ", colnames(data)[1], 
+  plot(TreeKDE, type = "lambda", family = "serif",
+       main = paste("lambda Tree (kde) ", colnames(data)[1], 
                                               "and", colnames(data)[2]))
   
 }
@@ -567,11 +569,14 @@ landscape_diag <- function(data){
   Land3 <- landscape(Diag, dimension = 2, KK = 1, tseq = tseq)
   
   par(mfrow = c(3,1), mar=c(2,3,2,2))
-  plot(tseq, Land1, type = "l", main = paste("Landscape, dim = 0, with", colnames(data)[1], 
+  plot(tseq, Land1, type = "l", family = "serif",
+       main = paste("Landscape, dim = 0, with", colnames(data)[1], 
                                              "and", colnames(data)[2]), ylab = "", asp = 1, col = "red", lwd = 3)
-  plot(tseq, Land2, type = "l", main = paste("Landscape, dim = 1, with", colnames(data)[1], 
+  plot(tseq, Land2, type = "l", family = "serif", 
+       main = paste("Landscape, dim = 1, with", colnames(data)[1], 
                                              "and", colnames(data)[2]), ylab = "", asp = 1, col = "red", lwd = 3)
-  plot(tseq, Land3, type = "l", main = paste("Landscape, dim = 2, with", colnames(data)[1], 
+  plot(tseq, Land3, type = "l", family = "serif", 
+       main = paste("Landscape, dim = 2, with", colnames(data)[1], 
                                              "and", colnames(data)[2]), ylab = "", asp = 1, col = "red", lwd = 3)
 }
 
