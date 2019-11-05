@@ -45,7 +45,7 @@ if (true){
   bui_dc_y <- read.csv(
     "C:/Users/kimh2/Desktop/Wildfire-NN-ML/ML_Data/Old Data/merra2_inactive_calfire_jja.csv")[,c("bui","dc","fcount_aqua")]
 }
-
+rips_persistence(tmax_humidity)
 mapper_graph(tmax_humidity, "active")
 if (true){
   mapper_graph(tmax_humidity_y, "inactive")
@@ -313,7 +313,7 @@ mapper_graph <- function(data, type){
 
 #rips persistence using kde, knnDE, and dtm for confidence band
 rips_persistence <- function(data){
-  Diag <- ripsDiag(data[,c(1,2)], maxdimension = 2, maxscale = 1.0, location = TRUE,
+  Diag <- ripsDiag(data[,c(2,8)], maxdimension = 2, maxscale = 1.0, location = TRUE,
                    library = c("GUDHI", "Dionysus"), printProgress = FALSE)$diagram
   
   
@@ -323,14 +323,13 @@ rips_persistence <- function(data){
   plot(Diag, diagLim=NULL, dimension=NULL, col=NULL, rotated=FALSE, barcode=FALSE,
        band=2*band[["width"]], lab.line=2.2, colorBand="pink",
        colorBorder=NA, add = FALSE, cex.lab = 2.5, cex = 2.5,
-       main= paste("persistence diagram with ", colnames(data)[1], "and \n", colnames(data)[2],
-                   ": kde band"))
-  
+       main = "Active")
+       
+  #main= paste("persistence diagram with ", colnames(data)[1], "and \n", colnames(data)[2],": kde band"))
   plot(Diag, diagLim=NULL, dimension=NULL, col=NULL, rotated=FALSE, barcode=FALSE,
        band=NULL, lab.line=2.2, colorBand="pink",
        colorBorder=NA, add = FALSE, cex.lab = 2.5, cex = 2.5,
-       main= paste("persistence diagram with ", colnames(data)[1], "and \n", colnames(data)[2],
-                   ": kde band"))
+       main= "Inactive")
   # legend("bottomright", legend=c("connection", "loops", "voids"), pch=c(16, 2, 5), 
   #        col=c("black", "red", "blue"),
   #        title = "Legend")

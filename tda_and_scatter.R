@@ -18,10 +18,14 @@ setwd(work_dir)
 # Wind speed (10) DC(14)
 # DC(14) Tmax(2)
 
-X1 <- read.csv("merra2_active_calfire_jja.csv")[,c(2,8)]
-Y1 <- read.csv("merra2_inactive_calfire_jja.csv")[,c(2,8)]
+active_summer <- read.csv("merra2_active_calfire_jja.csv")[,c(2,8)]
+inactive_summer <- read.csv("merra2_inactive_calfire_jja.csv")[,c(2,8)]
+
+active_year <- read.csv("merra2_active_calfire_nom_j2d.csv")[,c(2,8)]
+inactive_year <- read.csv("merra2_inactive_calfire_nom_j2d.csv")[,c(2,8)]
 #plot(X1, family = "serif")
-density_plot(X1, Y1)
+density_comparison(active_summer, inactive_summer)
+density_comparison(active_year, inactive_year)
 
 #density plots with contour lines
 #X1: active summer/year
@@ -111,6 +115,12 @@ density_comparison <- function (X1, Y1){
   
   grid.arrange(hist_top, empty, plot3, hist_right, 
                ncol=2, nrow=2, widths=c(4, 1), heights=c(1, 4))
+  
+  result_t2mmax <- ks.test(X1[,1],as.numeric(Y1[,1]))
+  result_qv2m <- ks.test(X1[,2],as.numeric(Y1[,2]))
+  
+  print(paste("p-value of t2mmax:", result_t2mmax[2]))
+  print(paste("p-value of qv2m:", result_qv2m[2]))
 }
 
 learning_TDA(){
