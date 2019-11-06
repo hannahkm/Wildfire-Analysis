@@ -50,12 +50,9 @@ Y <- rbind(X1[,2, drop = FALSE],Y1[,2, drop = FALSE])
 
 plot4 <- ggplot(rbind(data.frame(X1, group="active"), data.frame(Y1, group="inactive")), 
                 aes(x=t2mmax,y=qv2m)) + 
-  geom_density2d(aes(fill=group, color=group), size=0.5, contour=TRUE) +
-  # stat_density2d(geom="density2d", aes(fill=group, color = group),
-  #                size=0.5,
-  #                contour=TRUE) +
+  geom_density2d(aes(color=group), size=0.5, contour=TRUE) +
   scale_color_manual(values=c("active"="red", "inactive"="blue")) +
-  scale_fill_manual(values=c("active" = "red", "inactive"="white")) + 
+  #scale_fill_manual(values=c("active" = "red", "inactive"="white")) + 
   theme_minimal() +
   xlim(round(min(Y1[,1], X1[,1])-1),round(max(Y1[,1],X1[,1]))+1) + 
   ylim(round(min(Y1[,2],X1[,2])-1),round(max(Y1[,2],X1[,2]))+1) +

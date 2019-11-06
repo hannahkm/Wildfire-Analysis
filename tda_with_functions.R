@@ -276,35 +276,54 @@ mapper_graph <- function(data, type){
     column = column.list[k]
     vertex.size <- rep(0,data.mapper2$num_vertices)
     
-    i <- which(colnames(data) == column)
-    points.in.vertex <- data.mapper2$points_in_vertex[[i]]
-    len <- length(points.in.vertex)
-    count <- 0
-    
-    for (j in 1:len) {
-      if (!is.na(data[points.in.vertex[[j]], "fcount_aqua"])) {
-        if (data[points.in.vertex[[j]], "fcount_aqua"] >= 50) {
-          count <- count + abs(data[points.in.vertex[[j]], "fcount_aqua"])
+    #i <- which(colnames(data) == column)
+    for (i in 1:data.mapper2$num_vertices){
+      points.in.vertex <- data.mapper2$points_in_vertex[[i]]
+      len <- length(points.in.vertex)
+      count <- 0
+      
+      for (j in 1:len) {
+        if (!is.na(data[points.in.vertex[[j]], column])) {
+          count <- count + data[points.in.vertex[[j]], column]
+          # if (data[points.in.vertex[[j]], column] >= 50) {
+          #   count <- count + abs(data[points.in.vertex[[j]], column])
+          # }
         }
       }
-      
-      if (count <= 5) {
-        print(count)
-        count <- 5
-      } else{
-        count <- count / 20
+      if (column == "day"){
+        if (count <= 5) {
+          count <- 5
+        } else{
+          count <- count / 20
+        }
+        vertex.size[i] <- count * 0.1
+      } else {
+        vertex.size[i] <- count * 0.3
       }
-      vertex.size[i] <- count * 0.1
+      
     }
+    
+    
     
     # plot(data.graph, main = paste(type, "summers - size based \n on",column), 
     #      vertex.label = NA,
     #      cex.main=0.5, horizontal=TRUE, vertex.size = vertex.size, layout = l)
+    if (k == 1){
+      vertex.labels <- rep(NA,data.mapper2$num_vertices)
+      for (j in 1:data.mapper2$num_vertices){
+        if (vertex.size[j] %in% rev(sort(vertex.size))[1:10]){
+          vertex.labels[j] <- j
+        }
+      }
+      # print(vertex.size)
+      # print(sort(vertex.size))
+    }
+    
     
     plot(data.graph, main = paste(type, "summers - size based \n on", 
                                   column), 
-         vertex.label = NA, cex.main=0.5, horizontal=TRUE, 
-         vertex.size = abs(vertex.size)+5, layout = l,
+         vertex.label = vertex.labels, cex.main=0.5, horizontal=TRUE, 
+         vertex.label.color = "white", vertex.size = (abs(vertex.size)+2)*2, layout = l,
          vertex.color = ifelse(vertex.size > 0, "red", 
                                ifelse(vertex.size < 0,"blue", "black")))
   }
@@ -325,7 +344,8 @@ rips_persistence <- function(data){
        colorBorder=NA, add = FALSE, cex.lab = 2.5, cex = 2.5,
        main = "Active")
        
-  #main= paste("persistence diagram with ", colnames(data)[1], "and \n", colnames(data)[2],": kde band"))
+  #main= paste("persistence diagram with ", colnames(data)[1], 
+      #"and \n", colnames(data)[2],": kde band"))
   plot(Diag, diagLim=NULL, dimension=NULL, col=NULL, rotated=FALSE, barcode=FALSE,
        band=NULL, lab.line=2.2, colorBand="pink",
        colorBorder=NA, add = FALSE, cex.lab = 2.5, cex = 2.5,
