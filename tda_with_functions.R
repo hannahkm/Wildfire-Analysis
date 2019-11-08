@@ -303,8 +303,6 @@ mapper_graph <- function(data, type){
       
     }
     
-    
-    
     # plot(data.graph, main = paste(type, "summers - size based \n on",column), 
     #      vertex.label = NA,
     #      cex.main=0.5, horizontal=TRUE, vertex.size = vertex.size, layout = l)
@@ -315,8 +313,6 @@ mapper_graph <- function(data, type){
           vertex.labels[j] <- j
         }
       }
-      # print(vertex.size)
-      # print(sort(vertex.size))
     }
     
     
@@ -324,6 +320,7 @@ mapper_graph <- function(data, type){
                                   column), 
          vertex.label = vertex.labels, cex.main=0.5, horizontal=TRUE, 
          vertex.label.color = "white", vertex.size = (abs(vertex.size)+2)*2, layout = l,
+         edge.width = 1.2, edge.color = "black",
          vertex.color = ifelse(vertex.size > 0, "red", 
                                ifelse(vertex.size < 0,"blue", "black")))
   }
