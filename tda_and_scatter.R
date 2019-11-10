@@ -27,6 +27,7 @@ inactive_year <- read.csv("merra2_inactive_calfire_nom_j2d.csv")[,c(2,8)]
 density_comparison(active_summer, inactive_summer)
 density_comparison(active_year, inactive_year)
 
+density_plot(active_summer, inactive_summer)
 #density plots with contour lines
 #X1: active summer/year
 #Y1: inactive summer/year
